@@ -41,8 +41,10 @@ Planned additions (approved, added in the phase that needs them): `framer-motion
 Any other dependency needs a new entry here and the user's approval.
 
 Commands: `npm run dev` (port 3000), `npm run build`, `npm start`, `npm run lint`,
-`npm run typecheck`, `npm run fonts:sync`. Before the defense: `npm run build` must pass
-— run it while `dev` is stopped (or delete `.next` afterwards), the two share that folder.
+`npm run typecheck`, `npm run fonts:sync`. Both `dev` and `build` write to `.next/`:
+run `npm run build` only while the dev server is **stopped**, and never delete `.next`
+under a live server (it returns 500s until restarted). Before the defense, `npm run build`
+must be green.
 
 ---
 
