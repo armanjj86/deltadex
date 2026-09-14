@@ -248,6 +248,9 @@ store read fails, the UI falls back to the seed data silently.
 - Shapes/elevation: card `22px`, button `12px`/`14px`, pill `11px`, brand `10px`; shadows
   `--sh-widget`, `--sh-soft`; accent glows `--glow-btn`, `--glow-mark`.
 - Background: `<Deco />` only (blurred orbs + diagonal band + vignette). **No grid patterns.**
+- Stat deltas (`+12.4%` next to a big number): never glued to the value — `.num` chip with
+  `ms-2 px-1.5 py-[2px] rounded-[6px] text-[12px] tracking-[0]` on `--up-dim` / `--down-dim`
+  (this becomes the `StatDelta` bit of the Phase 1 StatStrip).
 - Frames in `design-frames/` are the visual target; when a detail is ambiguous, ask with the frame
   number instead of guessing. Every page must fit 1440×900 without awkward scrolling
   (the landing must fit strictly within 900px, like frame 01).
@@ -296,3 +299,5 @@ Document names in this repo (the master prompt used two idealised paths): the in
   name, `font-synthesis-weight: none`); `--f-body` now falls back to `--font-fa`. Glossary-neutral label
   Label `Network gas` → `Network cost` / «هزینه شبکه» (new row in
   `docs/design/glossary.md` §1; the document's wording «کارمزد شبکه» stays for messages).
+  Stat-strip delta values got their own spacing/chip treatment (see §8) instead of sitting flush
+  against the number.

@@ -85,7 +85,11 @@ export default async function ScaffoldPage({
               <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text2">{s.label}</p>
               <p className="num-line mt-1 text-[24px] font-extrabold tracking-[-0.02em]">
                 <span className="num">{s.value}</span>
-                {s.delta ? <span className="num ms-2 text-[13px] font-bold text-up">{s.delta}</span> : null}
+                {s.delta ? (
+                  <span className="num ms-2 inline-flex rounded-[6px] bg-up-dim px-1.5 py-[2px] text-[12px] font-bold tracking-[0] text-up">
+                    {s.delta}
+                  </span>
+                ) : null}
               </p>
             </div>
           ))}
