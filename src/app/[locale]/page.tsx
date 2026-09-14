@@ -28,6 +28,8 @@ export default async function ScaffoldPage({
     { label: t('demo.locked'), value: DEMO_STORY.veDelta.locked.toLocaleString('en-US') },
   ];
 
+  /* num-line (not num): the row must keep mirroring in RTL, only the value itself
+      is isolated as an LTR token (see ARCHITECTURE.md §7). */
   const swatches = [
     { label: t('tokens.primary'), varName: '--acc', className: 'bg-acc' },
     { label: t('tokens.secondary'), varName: '--acc2', className: 'bg-acc2' },
@@ -79,11 +81,11 @@ export default async function ScaffoldPage({
         <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-text2">{t('demo.heading')}</p>
         <div className="mt-4 grid grid-cols-3 gap-y-5">
           {stats.map((s) => (
-            <div key={s.label} className="border-hair pe-6 ps-0 first:ps-0 [&:nth-child(n+4)]:pt-4">
+            <div key={s.label} className="border-hair pe-6">
               <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text2">{s.label}</p>
-              <p className="num mt-1 text-[24px] font-extrabold tracking-[-0.02em]">
-                {s.value}
-                {s.delta ? <span className="ms-2 text-[13px] font-bold text-up">{s.delta}</span> : null}
+              <p className="num-line mt-1 text-[24px] font-extrabold tracking-[-0.02em]">
+                <span className="num">{s.value}</span>
+                {s.delta ? <span className="num ms-2 text-[13px] font-bold text-up">{s.delta}</span> : null}
               </p>
             </div>
           ))}
@@ -106,7 +108,7 @@ export default async function ScaffoldPage({
           <div className="mt-4 flex items-center gap-4">
             <div>
               <p className="text-[11px] text-text2">{t('tokens.radiusCard')}</p>
-              <p className="num text-[15px] font-bold">22px</p>
+              <p className="num-line text-[15px] font-bold">22px</p>
             </div>
             <div>
               <p className="text-[11px] text-text2">{t('tokens.elevation')}</p>
@@ -161,7 +163,7 @@ export default async function ScaffoldPage({
           </div>
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-text2">{t('fonts.monoLabel')}</p>
-            <p className="num mt-2 text-[16px] font-medium">{t('fonts.monoSample')}</p>
+            <p className="mono mt-2 text-[16px] font-medium">{t('fonts.monoSample')}</p>
           </div>
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-text2">{t('fonts.faLabel')}</p>

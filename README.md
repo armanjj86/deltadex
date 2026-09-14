@@ -30,12 +30,12 @@ stake, lock or vote. "Reset demo" (added in a later phase) clears it.
 ```
 ├── docs/
 │   ├── use-cases/            ← the specification: 32 use cases, 9 chapters + intro (Persian)
-│   │   ├── ch00-intro.md         introduction & 8 product features
+│   │   ├── 00-intro.md               introduction & 8 product features
 │   │   └── ch01-wallet.md … ch09-security.md
 │   ├── design/
 │   │   ├── AURORA-DESIGN-PROMPT.md  ← complete design system (colors, type, components)
 │   │   └── glossary.md              locked Persian ↔ English terminology
-│   └── assests/              ← Delta brand marks (dark + light) [also copied to public/brand/]
+│   └── assets/               ← Delta brand marks (dark + light) [also copied to public/brand/]
 ├── design-frames/            ← 9 rendered UI frames (PNG, 1440×900@2x) — visual reference
 ├── src/                      ← the prototype source (Next.js + TypeScript + Tailwind)
 ├── public/fonts/             ← self-hosted fonts (Space Grotesk, IBM Plex Mono, Vazirmatn, Ray)

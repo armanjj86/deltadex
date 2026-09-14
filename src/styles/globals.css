@@ -3,7 +3,7 @@
  *   fonts + tokens + deco  ->  Tailwind base/components/utilities (utilities win)
  */
 @import './vazirmatn.css';
-/* @import './ray.css';   <- uncomment once public/fonts/ray/*.woff2 exist (see public/fonts/README.md) */
+@import './ray.css';
 @import './fonts.css';
 @import './tokens.css';
 @import './deco.css';

@@ -24,7 +24,7 @@
     "delta": "قیمت DELTA",
     "tvl": "ارزش کل دارایی‌ها",
     "volume": "حجم ۲۴ ساعت",
-    "gas": "گاز شبکه",
+    "gas": "هزینه شبکه",
     "wallet": "کیف پول دمو",
     "locked": "veDELTA قفل‌شده"
   },
@@ -46,7 +46,7 @@
     "latinSample": "Space Grotesk — Trade like it's yours.",
     "monoLabel": "اعداد / مونو",
     "monoSample": "0x7A3f...F9C2 · 128.4M · $0.4218",
-    "faLabel": "فونت فارسی",
+    "faLabel": "فونت فارسی (Ray)",
     "faSample": "معامله کنید؛ انگار مال خودتان است."
   }
 }

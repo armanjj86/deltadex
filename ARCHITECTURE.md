@@ -220,7 +220,15 @@ store read fails, the UI falls back to the seed data silently.
   properties only** (`ms-/me-/ps-/pe-/text-start/inset-inline-*`); never `left-4`/`ml-4`.
   Icons/arrows that express direction flip with `rtl:rotate-180` (Tailwind's `rtl:` variant is available).
 - Numbers: Persian digits via `Intl.NumberFormat(locale)` **except** prices, which stay USD with
-  Western digits, and addresses/hashes, which are always `class="num"` (LTR, isolate, monospace).
+  Western digits, and addresses/hashes, which are always monospace + LTR.
+- Numeral classes (from `src/styles/tokens.css`) — use the right one or RTL breaks the rhythm:
+  | class | direction | use |
+  |---|---|---|
+  | `.num-line` | follows the page | a **row** of figures next to a Persian label (stat strip, table cell, amount): tabular mono, aligns to the inline start, mirrors naturally |
+  | `.num` | forced LTR + isolate | an atomic token inside RTL prose (price `0.4218`, `128.4M`, ratio) that must never be re-ordered |
+  | `.mono` | forced LTR + isolate | address, hash, `var(--x)` snippet |
+  Never put `.num` on a whole row that also contains a percentage/label chip: `unicode-bidi: isolate`
+  pins the row to the far end of its column (the exact bug found in the Phase 0 handover).
 - Dates: Gregorian for `en`; Jalali (Shomalī, `fa-IR-u-ca-persian`) for `fa`, via
   `src/lib/format.ts` helpers (Phase 2). Deadlines show relative time + absolute date.
 - `lang`/`dir` correctness beats cleverness: a page that renders LTR inside `dir="rtl"` is a bug.
@@ -233,7 +241,10 @@ store read fails, the UI falls back to the seed data silently.
   hex/px value in a component; if a token is missing, add it to `tokens.css` (+ this file's changelog).
   Alpha variants: `color-mix(in srgb, var(--acc) 12%, transparent)`.
 - Typography: `--font-en` Space Grotesk (display/body) · `--font-num` IBM Plex Mono (`.num`/`.mono`) ·
-  `--font-fa` Ray → Vazirmatn fallback. Switching the Persian face is one line (see `public/fonts/README.md`).
+  `--font-fa` **Ray (installed: 6 weights in `public/fonts/ray/`)** with Vazirmatn as fallback;
+  `--f-body` = Space Grotesk → Ray so Latin stays Latin and Persian gets Persian inside one string.
+  Switching the Persian face is one line (see `public/fonts/README.md`). Ray has no italic;
+  `font-synthesis-weight: none` prevents fake bolding.
 - Shapes/elevation: card `22px`, button `12px`/`14px`, pill `11px`, brand `10px`; shadows
   `--sh-widget`, `--sh-soft`; accent glows `--glow-btn`, `--glow-mark`.
 - Background: `<Deco />` only (blurred orbs + diagonal band + vignette). **No grid patterns.**
@@ -263,16 +274,25 @@ store read fails, the UI falls back to the seed data silently.
 | 13 | (future, out of scope) OnChainTransactionService | — |
 
 Per-phase loop: plan in Persian → user approval → build → Persian test checklist → bug fixes →
-user "OK" → next phase. Docs referenced in the prompt keep their real repo names:
-`docs/use-cases/ch00-intro.md` (not `00-intro.md`), `docs/design/AURORA-DESIGN-PROMPT.md`
-(not `aurora-theme.md`), `docs/assests/delta-mark-{dark,light}.png` (folder is misspelled upstream;
-copies live in `public/brand/`).
+user "OK" → next phase.
+
+Document names in this repo (the master prompt used two idealised paths): the intro is
+`docs/use-cases/00-intro.md`, the design system is `docs/design/AURORA-DESIGN-PROMPT.md`
+(there is no `aurora-theme.md`), brand marks are `docs/assets/delta-mark-{dark,light}.png`
+(the folder typo was fixed and copies live in `public/brand/`).
 
 ---
 
 ## 10 · Changelog of shared contracts
 
-- **Phase 0** — initial contracts: `TransactionService` (18 kinds + payloads), `WalletService`
+- **Phase 0 (a)** — initial contracts: `TransactionService` (18 kinds + payloads), `WalletService`
   (types only), Aurora CSS variables, font variable contract (`--font-en/--font-num/--font-fa`),
   demo story module, store key table, `PhasePlaceholder` (temporary), `src/app/page.tsx` redirect
   (temporary until Phase 2 middleware). No UI components exist yet.
+- **Phase 0 (b) — post-handover fixes:**
+  `docs/assests/` → `docs/assets/` and `docs/use-cases/ch00-intro.md` → `00-intro.md` (approved renames;
+  content untouched). New numeral class `.num-line` added and `.num` narrowed to atomic tokens, to fix
+  the RTL stat-strip alignment. **Ray enabled** (`src/styles/ray.css` with all 6 weights, single family
+  name, `font-synthesis-weight: none`); `--f-body` now falls back to `--font-fa`. Glossary-neutral label
+  Label `Network gas` → `Network cost` / «هزینه شبکه» (new row in
+  `docs/design/glossary.md` §1; the document's wording «کارمزد شبکه» stays for messages).

@@ -60,8 +60,8 @@
   --modal-w: 400px;
 
   /* Typography */
-  --f-disp: var(--font-en);
-  --f-body: var(--font-en);
+  --f-disp: var(--font-en), var(--font-fa);
+  --f-body: var(--font-en), var(--font-fa);
   --f-num: var(--font-num);
   --f-mono: var(--font-num);
 }
@@ -69,13 +69,29 @@
 body {
   background: var(--bg);
   color: var(--text);
+  /* Latin-first stack; Persian glyphs fall through to --font-fa (Ray/Vazirmatn).
+     Persian-only UI can opt in with the `font-fa` class on <body> (see [locale]/layout.tsx). */
   font-family: var(--f-body);
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/** Numerals, addresses, hashes — always LTR monospace, tabular figures. */
+/**
+ * Numerals. Two flavours:
+ *   .num-line  → a whole text row that should look identical in LTR and RTL
+ *                (e.g. "0x7A3f…F9C2  18,290"): tabular figures, starts at the inline-start
+ *                edge of its box, and mirrors as a row (never pinned to a physical side).
+ *   .num       → an atomic LTR token (price, address, hash, ratio) that must never be
+ *                re-ordered by bidi: forced LTR + isolate.
+ *   .mono      → code/mono display, atomic like .num.
+ */
+.num-line {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
 .num,
 .mono {
   font-family: var(--f-mono);

@@ -7,12 +7,13 @@
  */
 
 :root {
-  /* Latin display + body (Space Grotesk) */
-  --font-en: var(--font-space-grotesk), 'Vazirmatn', sans-serif;
+  /* Latin display + body (Space Grotesk). Persian falls back via --f-body in tokens.css. */
+  --font-en: var(--font-space-grotesk), sans-serif;
 
   /* Numerals / addresses / hashes (IBM Plex Mono) */
   --font-num: var(--font-ibm-plex-mono), ui-monospace, monospace;
 
-  /* Persian UI text — Ray once installed, Vazirmatn until then. */
+  /* Persian UI text — Ray (public/fonts/ray/, 6 weights) with Vazirmatn as safety net.
+     To go back to Vazirmatn only: remove 'Ray' here or drop the @import in globals.css. */
   --font-fa: 'Ray', 'Vazirmatn', var(--font-space-grotesk), sans-serif;
 }

@@ -24,7 +24,7 @@
     "delta": "DELTA price",
     "tvl": "TVL",
     "volume": "24h volume",
-    "gas": "Network gas",
+    "gas": "Network cost",
     "wallet": "Demo wallet",
     "locked": "veDELTA locked"
   },
