@@ -1,0 +1,48 @@
+/**
+ * Ray — the project's own Persian brand font (Light / Medium / Bold).
+ *
+ * HOW TO ENABLE (one file, one line — no other change needed):
+ *   1. Drop the three files into public/fonts/ray/ as:
+ *        ray-light.woff2   (weight 300)
+ *        ray-medium.woff2  (weight 500)
+ *        ray-bold.woff2    (weight 700)
+ *      (.ttf works too — just keep the exact file name, e.g. ray-light.ttf)
+ *   2. Uncomment the three @font-face blocks below.
+ *   3. Make sure src/styles/globals.css imports this file:
+ *          @import './ray.css';
+ *   4. That is all. --font-fa in fonts.css already lists 'Ray' first, so every
+ *      Persian string switches over instantly; Vazirmatn stays as the fallback
+ *      for any weight/character Ray does not cover.
+ *
+ * Until then the prototype ships Vazirmatn so the demo never depends on a
+ * missing asset.
+ */
+
+/*
+@font-face {
+  font-family: "Ray";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/ray/ray-light.woff2") format("woff2"),
+       url("/fonts/ray/ray-light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ray";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/ray/ray-medium.woff2") format("woff2"),
+       url("/fonts/ray/ray-medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ray";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/ray/ray-bold.woff2") format("woff2"),
+       url("/fonts/ray/ray-bold.ttf") format("truetype");
+}
+*/

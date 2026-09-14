@@ -1,0 +1,52 @@
+{
+  "brand": {
+    "name": "دلتا دکس",
+    "tagline": "«معامله کنید؛ انگار مال خودتان است.»"
+  },
+  "phase": {
+    "title": "فاز ۰ — اسکلت پروژه",
+    "intro": "این اسکلت خالی پروتوتایپ است؛ هنوز هیچ صفحه‌ای طراحی نشده. این صفحه فقط برای آن است که بساز، فونت‌ها، توکن‌های Aurora و مسیربندی زبانی درست کار کنند.",
+    "nextUp": "گام بعد: فاز ۱ — کتابخانه کامپوننت آئورا (دکمه، کارت شیشه‌ای، نوار ناوبری، مودال، جدول و …)."
+  },
+  "tokens": {
+    "heading": "توکن‌های Aurora",
+    "primary": "رنگ اصلی",
+    "secondary": "رنگ دوم",
+    "positive": "مثبت",
+    "negative": "منفی",
+    "surface": "سطح شیشه‌ای",
+    "field": "فیلد ورودی",
+    "radiusCard": "گردی کارت",
+    "elevation": "سایه ویجت"
+  },
+  "demo": {
+    "heading": "داده‌های ثابت دموی پروژه",
+    "delta": "قیمت DELTA",
+    "tvl": "ارزش کل دارایی‌ها",
+    "volume": "حجم ۲۴ ساعت",
+    "gas": "گاز شبکه",
+    "wallet": "کیف پول دمو",
+    "locked": "veDELTA قفل‌شده"
+  },
+  "ui": {
+    "primaryButton": "اتصال کیف پول",
+    "ghostButton": "تغییر به تم روشن",
+    "fieldLabel": "شما پرداخت می‌کنید",
+    "fieldPlaceholder": "۰٫۰",
+    "toggleOn": "محافظت MEV",
+    "badgeVerified": "تاییدشده",
+    "badgePending": "در حال پردازش",
+    "badgeSuccess": "موفق",
+    "tabOne": "مبادله",
+    "tabTwo": "سفارش قیمتی",
+    "linkDocs": "معماری پروژه"
+  },
+  "fonts": {
+    "latinLabel": "لاتین",
+    "latinSample": "Space Grotesk — Trade like it's yours.",
+    "monoLabel": "اعداد / مونو",
+    "monoSample": "0x7A3f...F9C2 · 128.4M · $0.4218",
+    "faLabel": "فونت فارسی",
+    "faSample": "معامله کنید؛ انگار مال خودتان است."
+  }
+}

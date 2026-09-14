@@ -1,0 +1,52 @@
+{
+  "brand": {
+    "name": "Delta DEX",
+    "tagline": "Trade like it's yours."
+  },
+  "phase": {
+    "title": "Phase 0 — scaffold",
+    "intro": "This is the skeleton of the prototype: no pages are designed yet. The screen exists to prove that the build, the fonts, the Aurora tokens and the locale routing all work.",
+    "nextUp": "Next: Phase 1 — the Aurora component library (Button, Glass card, Topnav, Modal, Table …)."
+  },
+  "tokens": {
+    "heading": "Aurora tokens",
+    "primary": "Primary accent",
+    "secondary": "Secondary accent",
+    "positive": "Positive",
+    "negative": "Negative",
+    "surface": "Glass surface",
+    "field": "Input field",
+    "radiusCard": "Card radius",
+    "elevation": "Widget shadow"
+  },
+  "demo": {
+    "heading": "Canonical demo data",
+    "delta": "DELTA price",
+    "tvl": "TVL",
+    "volume": "24h volume",
+    "gas": "Network gas",
+    "wallet": "Demo wallet",
+    "locked": "veDELTA locked"
+  },
+  "ui": {
+    "primaryButton": "Connect Wallet",
+    "ghostButton": "Switch to light",
+    "fieldLabel": "You pay",
+    "fieldPlaceholder": "0.0",
+    "toggleOn": "MEV protection",
+    "badgeVerified": "Verified",
+    "badgePending": "Pending",
+    "badgeSuccess": "Success",
+    "tabOne": "Swap",
+    "tabTwo": "Limit",
+    "linkDocs": "Open architecture notes"
+  },
+  "fonts": {
+    "latinLabel": "Latin",
+    "latinSample": "Sphinx of black quartz, judge my vow.",
+    "monoLabel": "Numerals / mono",
+    "monoSample": "0x7A3f...F9C2 · 128.4M · $0.4218",
+    "faLabel": "Persian face",
+    "faSample": "معامله کنید؛ انگار مال خودتان است."
+  }
+}

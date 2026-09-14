@@ -1,0 +1,39 @@
+{
+  "name": "deltadex",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Delta DEX — decentralized exchange prototype (university bachelor project). All blockchain behaviour is mocked.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0",
+    "build": "next build",
+    "start": "next start -H 0.0.0.0",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "fonts:sync": "node scripts/sync-fonts.mjs",
+    "prepare": "node scripts/sync-fonts.mjs"
+  },
+  "dependencies": {
+    "next": "15.5.25",
+    "next-intl": "4.14.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/space-grotesk": "5.3.0",
+    "@fontsource/vazirmatn": "5.3.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.8",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "15.5.25",
+    "postcss": "^8.4.49",
+    "tailwindcss": "3.4.19",
+    "typescript": "5.9.3"
+  }
+}
