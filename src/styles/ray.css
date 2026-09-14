@@ -1,0 +1,62 @@
+/**
+ * Ray — the brand's own Persian face, self-hosted from public/fonts/ray/ (Phase 0).
+ *
+ * Each shipped weight is a separate family in its name table ("Ray Light", "Ray Bold", …),
+ * so we declare them all under ONE family name: font-family: "Ray". That is what makes
+ * `font-weight: 800` on a heading pick Ray-ExtraBold instead of faking a bold.
+ * Vazirmatn stays in the stack (src/styles/fonts.css → --font-fa) as the safety net for
+ * any glyph Ray does not carry.
+ */
+
+@font-face {
+  font-family: "Ray";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/ray/Ray-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ray";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/ray/Ray-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ray";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/ray/Ray-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ray";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/ray/Ray-ExtraBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ray";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/ray/Ray-Black.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ray";
+  font-style: normal;
+  font-weight: 950;
+  font-display: swap;
+  src: url("/fonts/ray/Ray-ExtraBlack.ttf") format("truetype");
+}
+
+/* Ray ships no italic: let browsers pick the real weight instead of synthesizing one. */
+:root {
+  font-synthesis-weight: none;
+}

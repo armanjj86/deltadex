@@ -1,0 +1,19 @@
+/**
+ * Font family contract (see also public/fonts/README.md).
+ *
+ * Latin faces come from next/font/local (src/lib/fonts.ts) which injects the
+ * CSS variables below. The Persian face is a plain @font-face set; switching
+ * Ray <-> Vazirmatn is a ONE LINE change: edit --font-fa.
+ */
+
+:root {
+  /* Latin display + body (Space Grotesk). Persian falls back via --f-body in tokens.css. */
+  --font-en: var(--font-space-grotesk), sans-serif;
+
+  /* Numerals / addresses / hashes (IBM Plex Mono) */
+  --font-num: var(--font-ibm-plex-mono), ui-monospace, monospace;
+
+  /* Persian UI text — Ray (public/fonts/ray/, 6 weights) with Vazirmatn as safety net.
+     To go back to Vazirmatn only: remove 'Ray' here or drop the @import in globals.css. */
+  --font-fa: 'Ray', 'Vazirmatn', var(--font-space-grotesk), sans-serif;
+}

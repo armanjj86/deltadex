@@ -1,0 +1,80 @@
+/**
+ * Aurora background decoration — the signature look of the theme.
+ * Blurred orbs + a diagonal light band + a vignette. NO GRID PATTERNS (rejected by design).
+ * Render once per page as <Deco /> behind all content (z-index 0, pointer-events none).
+ */
+
+.deco {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.deco .orb {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.95;
+}
+
+.deco .orb-1 {
+  top: -140px;
+  inset-inline-start: -120px;
+  background: rgba(24, 140, 100, 0.38);
+}
+.deco .orb-2 {
+  top: -180px;
+  inset-inline-end: -140px;
+  width: 460px;
+  height: 460px;
+  background: rgba(28, 110, 150, 0.3);
+}
+.deco .orb-3 {
+  bottom: -220px;
+  inset-inline-end: -160px;
+  width: 560px;
+  height: 560px;
+  background: rgba(90, 70, 180, 0.2);
+}
+.deco .orb-4 {
+  bottom: -240px;
+  inset-inline-start: -180px;
+  background: rgba(18, 100, 88, 0.28);
+}
+
+.deco .band {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1560px;
+  height: 440px;
+  transform: translate(-50%, -50%) rotate(-7deg);
+  background: linear-gradient(
+    90deg,
+    rgba(44, 224, 163, 0.15) 0%,
+    rgba(53, 199, 232, 0.12) 100%
+  );
+  filter: blur(52px);
+}
+
+.deco .vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 120% at 50% 50%,
+    transparent 45%,
+    rgba(2, 6, 5, 0.55) 100%
+  );
+}
+
+/* Reduced motion: the deco layer is static, but keep the hook for future anims. */
+@media (prefers-reduced-motion: reduce) {
+  .deco * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

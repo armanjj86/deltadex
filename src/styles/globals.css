@@ -1,0 +1,42 @@
+/**
+ * Global stylesheet. Order matters:
+ *   fonts + tokens + deco  ->  Tailwind base/components/utilities (utilities win)
+ */
+@import './vazirmatn.css';
+@import './ray.css';
+@import './fonts.css';
+@import './tokens.css';
+@import './deco.css';
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--border);
+  }
+
+  html {
+    background: var(--bg);
+    color-scheme: dark;
+  }
+
+  body {
+    /* min-height keeps the fixed deco layer visible on short pages */
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--acc) 35%, transparent);
+    color: var(--text);
+  }
+
+  /* Hairline scrollbar that matches the glass surfaces (desktop-only prototype). */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--field) transparent;
+  }
+}

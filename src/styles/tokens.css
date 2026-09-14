@@ -1,0 +1,108 @@
+/**
+ * Aurora design tokens — single source of truth for the whole prototype.
+ * Values are copied verbatim from docs/design/AURORA-DESIGN-PROMPT.md §2.
+ *
+ * Conventions:
+ *  - Tailwind maps to these variables (tailwind.config.ts); never re-declare a value.
+ *  - Alpha variants use color-mix(): e.g. `color-mix(in srgb, var(--acc) 12%, transparent)`.
+ *  - Layout must use LOGICAL properties (ms/me/ps/pe, inset-inline-*) so RTL mirrors for free.
+ */
+
+:root {
+  /* Surfaces */
+  --bg: #060b09;
+  --surface: rgba(255, 255, 255, 0.04);
+  --field: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.09);
+  --topnav-bd: rgba(255, 255, 255, 0.07);
+
+  /* Text */
+  --text: #ecf5f0;
+  --text2: #8ca09a;
+
+  /* Accents */
+  --acc: #2ce0a3;
+  --acc2: #35c7e8;
+  --acc-dim: rgba(44, 224, 163, 0.1);
+  --acc-bd: rgba(44, 224, 163, 0.3);
+  --grad: linear-gradient(93deg, #2ce0a3 5%, #35c7e8 95%);
+
+  /* Semantic */
+  --up: #3fe08b;
+  --up-dim: rgba(63, 224, 139, 0.1);
+  --down: #ff6b7a;
+  --down-dim: rgba(255, 107, 122, 0.1);
+  --btn-fg: #04120c;
+
+  /* Token chip palette */
+  --tk-a: #2ce0a3; /* DELTA  (mint)      */
+  --tk-b: #8f9dff; /* WETH   (periwinkle) */
+  --tk-c: #3bdcc2; /* USDC   (teal)       */
+  --tk-d: #f2b34c; /* WBTC   (amber)      */
+
+  /* Shape */
+  --r-card: 22px;
+  --r-btn: 12px;
+  --r-btn-lg: 14px;
+  --r-pill: 11px;
+  --r-brand: 10px;
+
+  /* Elevation */
+  --sh-widget: 0 24px 70px rgba(0, 0, 0, 0.55);
+  --sh-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --glow-btn: 0 10px 30px rgba(44, 224, 163, 0.28);
+  --glow-mark: 0 0 26px rgba(44, 224, 163, 0.4);
+
+  /* Layout metrics (desktop only, 1440px target) */
+  --topnav-h: 72px;
+  --page-px: 56px;
+  --swap-w: 428px;
+  --modal-w: 400px;
+
+  /* Typography */
+  --f-disp: var(--font-en), var(--font-fa);
+  --f-body: var(--font-en), var(--font-fa);
+  --f-num: var(--font-num);
+  --f-mono: var(--font-num);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  /* Latin-first stack; Persian glyphs fall through to --font-fa (Ray/Vazirmatn).
+     Persian-only UI can opt in with the `font-fa` class on <body> (see [locale]/layout.tsx). */
+  font-family: var(--f-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/**
+ * Numerals. Two flavours:
+ *   .num-line  → a whole text row that should look identical in LTR and RTL
+ *                (e.g. "0x7A3f…F9C2  18,290"): tabular figures, starts at the inline-start
+ *                edge of its box, and mirrors as a row (never pinned to a physical side).
+ *   .num       → an atomic LTR token (price, address, hash, ratio) that must never be
+ *                re-ordered by bidi: forced LTR + isolate.
+ *   .mono      → code/mono display, atomic like .num.
+ */
+.num-line {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.num,
+.mono {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/** Persian prose gets extra breathing room so descenders never clip. */
+[dir='rtl'] body,
+[dir='rtl'] .prose-fa {
+  line-height: 1.85;
+}
