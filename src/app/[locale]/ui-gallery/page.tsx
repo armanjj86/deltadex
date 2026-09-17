@@ -59,7 +59,7 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
               <Button size="md">{t('openModal')}</Button>
             </div>
           </div>
-          <HeroTitle className="px-6 pt-8" lead="Trade like it’s" gradWord="yours" />
+          <HeroTitle className="px-6 pt-8" lead={t('heroLead')} gradWord={t('heroGrad')} trailing={t('heroTrailing')} />
           <div className="flex flex-wrap items-center gap-4 px-6 pb-7 pt-5">
             <TokenGlyphRow />
             <p className="text-[12.5px] text-text2">
@@ -110,7 +110,8 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
               استخر نقدینگی · تعهدسپاری · مزرعه‌های کشت سود · پل بین‌زنجیره‌ای · حاکمیت · پورتفولیو
             </p>
             <p className="mt-3 text-[12px] leading-loose" style={{ fontFamily: 'var(--font-fa)' }}>
-              وزن‌ها: Light ۳۰ · Medium ۵۰۰ · Bold ۷۰۰ · ExtraBold ۸۰ · Black ۹۰۰ · ExtraBlack ۹۵۰
+              {t('fontWeightsLabel')} Light 300 · Medium 500 · Bold 700 · ExtraBold 800 · Black 900 ·
+              ExtraBlack 950
             </p>
           </Card>
         </div>

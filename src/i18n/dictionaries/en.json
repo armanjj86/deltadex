@@ -111,7 +111,7 @@
     "colTvl": "TVL",
     "colVolume": "Volume 24h",
     "colApr": "APR",
-    "subtitle": "src/components/'{'ui,widgets,layout,brand'}' · Aurora tokens only",
+    "subtitle": "src/components (ui · widgets · layout · brand) — Aurora tokens only",
     "buttonSection": "Buttons",
     "fieldsSection": "Fields · tokens · controls",
     "connectWallet": "Connect Wallet",
@@ -155,6 +155,10 @@
     "h1Label": "H1 · landing hero",
     "swapMeta": "LP · in range · fee tier 0.3%",
     "swapMeta2": "LP · in range · fee tier 0.05%",
-    "prototypeLabel": "Prototype"
+    "prototypeLabel": "Prototype",
+    "heroLead": "Trade like it’s",
+    "heroGrad": "yours",
+    "fontWeightsLabel": "Weights:",
+    "heroTrailing": "."
   }
 }

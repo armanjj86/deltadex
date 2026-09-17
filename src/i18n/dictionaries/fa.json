@@ -111,7 +111,7 @@
     "colTvl": "ارزش کل",
     "colVolume": "حجم ۲۴ ساعت",
     "colApr": "نرخ پاداش سالانه",
-    "subtitle": "src/components/'{'ui,widgets,layout,brand'}' · فقط توکن‌های Aurora",
+    "subtitle": "src/components (ui · widgets · layout · brand) — فقط توکن‌های Aurora",
     "buttonSection": "دکمه‌ها",
     "fieldsSection": "فیلدها · توکن‌ها · کنترل‌ها",
     "connectWallet": "اتصال کیف پول",
@@ -128,7 +128,7 @@
     "all": "همه",
     "myPositions": "موقعیت‌های من",
     "verified": "تاییدشده",
-    "weights": "۴۰ تا ۷۰",
+    "weights": "۴۰۰ تا ۷۰۰",
     "payStatic": "شما پرداخت می‌کنید",
     "flexible": "منعطف",
     "fixedTerm": "با مدت ثابت",
@@ -155,6 +155,10 @@
     "h1Label": "H1 · قهرمان صفحه اصلی",
     "swapMeta": "توکن نقدینگی · در بازه · سطح کارمزد ۰٫۳٪",
     "swapMeta2": "توکن نقدینگی · در بازه · سطح کارمزد ۰٫۰۵٪",
-    "prototypeLabel": "پروتوتایپ"
+    "prototypeLabel": "پروتوتایپ",
+    "heroLead": "معامله کنید؛ انگار مال",
+    "heroGrad": "خودتان است.",
+    "fontWeightsLabel": "وزن‌ها:",
+    "heroTrailing": ""
   }
 }

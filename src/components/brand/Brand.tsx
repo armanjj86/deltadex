@@ -61,15 +61,18 @@ export function BrandLockup({
 export function HeroTitle({
   lead,
   gradWord,
+  trailing = '.',
   className,
 }: {
   lead: ReactNode;
   gradWord: ReactNode;
+  /** Punctuation glued to the gradient word; pass '' for languages that use «.»-free headlines. */
+  trailing?: string;
   className?: string;
 }): ReactNode {
   return (
     <h1 className={cn('text-[60px] font-extrabold leading-[1.05] tracking-[-0.028em]', className)}>
-      {lead} <span className="grad-word">{gradWord}.</span>
+      {lead} <span className="grad-word">{gradWord + trailing}</span>
     </h1>
   );
 }
