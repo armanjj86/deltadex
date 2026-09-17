@@ -261,6 +261,10 @@ store read fails, the UI falls back to the seed data silently.
   `{...(onChange ? { onClick: () => onChange(!checked) } : {})}`. Handlers passed as plain props from
   another client component are fine. Interactive *state* lives in `features/*` (or in the small client
   leaves of the Phase 1 gallery).
+- **Dictionary strings are ICU-parsed**: a literal `{` or `}` (file paths like
+  `src/components/{ui,widgets}`, or JSX-ish snippets) must be written as `'{'` / `'}`` or the render
+  throws `INVALID_ARGUMENT_TYPE`. Curly braces never appear in user-facing Persian copy, so this only
+  bites developer-facing notes — keep them out of the dictionaries if you can.
 - **No strings inside components.** Topnav / Footer / Modal / DemoRows take `labels` objects built from
   next-intl by the caller; a presentational component never reads a dictionary itself.
 - **Farsi mode must read as Farsi.** Anything a user can see goes through the dictionary; the only

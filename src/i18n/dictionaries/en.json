@@ -111,7 +111,7 @@
     "colTvl": "TVL",
     "colVolume": "Volume 24h",
     "colApr": "APR",
-    "subtitle": "src/components/{ui,widgets,layout,brand} · Aurora tokens only",
+    "subtitle": "src/components/'{'ui,widgets,layout,brand'}' · Aurora tokens only",
     "buttonSection": "Buttons",
     "fieldsSection": "Fields · tokens · controls",
     "connectWallet": "Connect Wallet",

@@ -111,7 +111,7 @@
     "colTvl": "ارزش کل",
     "colVolume": "حجم ۲۴ ساعت",
     "colApr": "نرخ پاداش سالانه",
-    "subtitle": "src/components/{ui,widgets,layout,brand} · فقط توکن‌های Aurora",
+    "subtitle": "src/components/'{'ui,widgets,layout,brand'}' · فقط توکن‌های Aurora",
     "buttonSection": "دکمه‌ها",
     "fieldsSection": "فیلدها · توکن‌ها · کنترل‌ها",
     "connectWallet": "اتصال کیف پول",
