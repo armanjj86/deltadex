@@ -40,7 +40,7 @@ export default async function ScaffoldPage({
   ];
 
   return (
-    <main className="relative z-10 mx-auto w-full max-w-[1040px] px-8 py-14">
+    <main className="relative z-10 mx-auto flex w-full max-w-[1040px] flex-1 flex-col justify-center px-8 py-12">
       {/* Brand line — the real logo mark is integrated in Phase 1. */}
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-3">

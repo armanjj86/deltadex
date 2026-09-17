@@ -12,6 +12,8 @@ const config: Config = {
       colors: {
         bg: 'var(--bg)',
         surface: 'var(--surface)',
+        'surface-alt': 'var(--surface-alt)',
+        'switch-off': 'var(--switch-off)',
         field: 'var(--field)',
         hair: 'var(--border)',
         text: 'var(--text)',

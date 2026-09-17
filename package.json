@@ -16,6 +16,8 @@
     "prepare": "node scripts/sync-fonts.mjs"
   },
   "dependencies": {
+    "clsx": "2.1.1",
+    "lucide-react": "0.545.0",
     "next": "15.5.25",
     "next-intl": "4.14.4",
     "react": "19.2.8",

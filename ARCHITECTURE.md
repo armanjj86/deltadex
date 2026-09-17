@@ -82,6 +82,7 @@ Rules:
 - `services/**` and `data/**` must not import from `components/**`.
 - Aliases: everything imports via `@/…` (see `tsconfig.json`).
 - Phases create their own `features/<area>/` folder; empty folders are not committed.
+`src/app/[locale]/ui-gallery/` is a **temporary** Phase 1 acceptance surface (removed in Phase 12).
 
 ---
 
@@ -253,6 +254,42 @@ store read fails, the UI falls back to the seed data silently.
 - Stat deltas (`+12.4%` next to a big number): never glued to the value — `.num` chip with
   `ms-2 px-1.5 py-[2px] rounded-[6px] text-[12px] tracking-[0]` on `--up-dim` / `--down-dim`
   (this becomes the `StatDelta` bit of the Phase 1 StatStrip).
+- **RSC-boundary rule (learned the hard way, Phase 1):** UI primitives stay **server-capable**
+  (no `'use client'`). React refuses to send a *freshly created* function from a server render into a
+  client component (`Event handlers cannot be passed to Client Component props`), so any primitive that
+  wraps a client control attaches handlers conditionally:
+  `{...(onChange ? { onClick: () => onChange(!checked) } : {})}`. Handlers passed as plain props from
+  another client component are fine. Interactive *state* lives in `features/*` (or in the small client
+  leaves of the Phase 1 gallery).
+- **No strings inside components.** Topnav / Footer / Modal / DemoRows take `labels` objects built from
+  next-intl by the caller; a presentational component never reads a dictionary itself.
+- **Component inventory (Phase 1)** — all under `src/components/`:
+  | component | file | key props |
+  |---|---|---|
+  | BrandMark · BrandLockup · HeroTitle · TokenGlyphRow · GasPill | `brand/Brand.tsx` | `size`, `lead`, `gradWord` |
+  | Button | `ui/Button.tsx` | `variant` primary·ghost·outline·danger·link · `size` sm·md·lg · `loading` · `leadingIcon` · `trailingIcon` · `fullWidth` |
+  | Badge | `ui/Badge.tsx` | `tone` up·down·acc·neutral·outline·outlineUp·outlineDown |
+  | Chip | `ui/Chip.tsx` | `size` sm·md · `active` · `outline` · `onClick` |
+  | Card · WidgetCard · CardHeader · PageHeader | `ui/Card.tsx` | `featured` (gradient wash) · `padded` |
+  | AmountField · InputField | `ui/Field.tsx` | `label` · `usdSub` · `maxAction` · `error` · `hint` · `ltr` |
+  | TokenIcon · TokenIconPair | `ui/TokenIcon.tsx` | `chip` a·b·c·d · `color` · `size` · `glyph` |
+  | TokenChip | `ui/TokenChip.tsx` | `symbol` · `chip` · `onClick` · `disabled` |
+  | TabList | `ui/Tabs.tsx` | `items[{id,label,icon?,disabled?}]` · `value` · `onChange` |
+  | SwitchBase | `ui/Switch.tsx` | `checked` · `onChange` · `label` (aria) · `size` |
+  | SliderBase | `ui/Slider.tsx` | native range + `--fill` · `marks[{value,label}]` |
+  | Tooltip | `ui/Tooltip.tsx` | CSS-only (hover + focus-visible) |
+  | Modal | `ui/Modal.tsx` (client) | `open` · `onClose` · `title` · `subtitle` · `footer` · `width=400` |
+  | TableGrid · TCell · SimplePagination | `ui/Table.tsx` | `template` (grid cols) · `head` · `numeric` · `align` |
+  | StatStrip · StatDelta | `widgets/StatStrip.tsx` | `stats[{label,value,delta,deltaTone,hint}]` · `cols` |
+  | ProToolsBar | `widgets/ProToolsBar.tsx` | `title` · `items[]` · `caption` · `checked` · `onChange` |
+  | Deco | `layout/Deco.tsx` | fixed background layer |
+  | Topnav · Footer | `layout/Topnav.tsx` · `layout/Footer.tsx` | presentational; `labels` in; `wallet` = chip or connect |
+  | Chrome | `layout/Chrome.tsx` (client) | pathname → active nav, then Topnav + Footer |
+  | ResetDemoButton | `layout/ResetDemoButton.tsx` | two-step confirm, clears `dd.v1.*` |
+  | DemoRows · PhasePlaceholder · PhaseOneDemos | `common/*` | gallery / temporary scaffolding |
+- Shared chrome is rendered once by `src/app/[locale]/layout.tsx`; page content must keep
+  `relative z-10` so it sits above `<Deco/>`. The landing page (Phase 4) keeps the chrome but must not
+  stack extra vertical padding — frame 01 is the one screen that has to fit 1440×900 exactly.
 - Frames in `design-frames/` are the visual target; when a detail is ambiguous, ask with the frame
   number instead of guessing. Every page must fit 1440×900 without awkward scrolling
   (the landing must fit strictly within 900px, like frame 01).
@@ -263,9 +300,9 @@ store read fails, the UI falls back to the seed data silently.
 
 | Phase | Scope | Status |
 |---|---|---|
-| 0 | Scaffold, tokens/fonts, `ARCHITECTURE.md`, locale routes | ✅ done |
-| 1 | Aurora component library + Topnav/Footer + logo | next |
-| 2 | next-intl middleware, dictionaries, RTL/format helpers, locale switcher | planned |
+| 0 | Scaffold, tokens/fonts, `ARCHITECTURE.md`, locale routes | ✅ merged to `main` (PR #1) |
+| 1 | Aurora component library + Topnav/Footer + SVG brand | ✅ built — in review (PR #2) |
+| 2 | next-intl middleware, dictionaries, RTL/format helpers, locale switcher | next |
 | 3 | Mock data + stores + wallet (MetaMask/demo) + MockTransactionService wiring | planned |
 | 4 | Landing `/` (frame 01) | planned |
 | 5 | Swap (ch02, UC-05…10) | planned |
@@ -303,3 +340,9 @@ Document names in this repo (the master prompt used two idealised paths): the in
   `docs/design/glossary.md` §1; the document's wording «کارمزد شبکه» stays for messages).
   Stat-strip delta values got their own spacing/chip treatment (see §8) instead of sitting flush
   against the number.
+- **Phase 1** — Aurora component library (§8 inventory), shared chrome (Topnav/Footer via `Chrome`),
+  SVG brand mark in `src/components/brand/`, `.aurora-*` CSS parts in `src/styles/ui.css`, temporary
+  `/[locale]/ui-gallery` acceptance page, `src/lib/cn.ts` + `src/lib/format.ts` (date helpers pulled
+  forward) + `src/lib/demo-persistence.ts` (dd.v1.* reset helper, used by the footer button).
+  New deps: `lucide-react@0.545.0`, `clsx@2.1.1` (both exact pins). `nav` + `footer` + `gallery`
+  sections added to both dictionaries; `footer.docs` = «راهنما» (new glossary-neutral label, review).

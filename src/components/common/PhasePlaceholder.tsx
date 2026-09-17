@@ -11,16 +11,21 @@ import type { ReactNode } from 'react';
 export async function PhasePlaceholder({
   section,
   params,
+  active,
+  wallet = 'chip',
 }: {
   section: string;
   params: Promise<{ locale: Locale }>;
+  /** Nav entry to highlight (the layout renders Topnav based on this). */
+  active?: 'trade' | 'pools' | 'stake' | 'farm' | 'bridge' | 'governance' | 'portfolio';
+  wallet?: 'chip' | 'connect';
 }): Promise<ReactNode> {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
 
   return (
-    <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-[900px] flex-col justify-center px-8 py-16">
+    <main className="relative z-10 mx-auto flex w-full max-w-[900px] flex-1 flex-col justify-center px-8 py-16">
       <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-text2">{section}</p>
       <h1 className="mt-3 text-[27px] font-extrabold tracking-[-0.02em]">{t('phase.title')}</h1>
       <p className="mt-4 max-w-[60ch] text-[14px] text-text2">{t('phase.intro')}</p>

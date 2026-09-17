@@ -1,0 +1,125 @@
+/**
+ * The few Aurora component parts that utilities cannot express (pseudo-elements, ::thumb).
+ * Colors/radii/shadows always come from tokens.css — nothing is hardcoded here.
+ */
+
+/* ---- Slider (stake duration, amount, fee pickers) — Aurora-styled native range input ---- */
+.aurora-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background-color: var(--field);
+  background-image: linear-gradient(
+    to right,
+    var(--acc) 0 calc(var(--fill, 50%) - 1px),
+    var(--acc2) var(--fill, 50%),
+    transparent calc(var(--fill, 50%) + 1px)
+  );
+  outline: none;
+}
+
+/* RTL: the fill grows from the inline-start (right) edge. */
+[dir='rtl'] .aurora-slider {
+  background-image: linear-gradient(
+    to left,
+    var(--acc) 0 calc(var(--fill, 50%) - 1px),
+    var(--acc2) var(--fill, 50%),
+    transparent calc(var(--fill, 50%) + 1px)
+  );
+}
+
+.aurora-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid var(--acc);
+  box-shadow: var(--sh-soft);
+  cursor: grab;
+}
+
+.aurora-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid var(--acc);
+  cursor: grab;
+}
+
+.aurora-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: var(--glow-btn);
+}
+
+/* ---- Modal surface: the wallet-modal triple shadow from frame 09 ---- */
+.aurora-modal {
+  background: #0b1411;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.6),
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(44, 224, 163, 0.06),
+    0 0 60px rgba(44, 224, 163, 0.08);
+}
+
+/* ---- Hairline table: separators come from the row top border, never boxed rows ---- */
+.aurora-tbl {
+  display: grid;
+  align-items: center;
+}
+
+.aurora-tbl > .tbl-cell {
+  min-width: 0;
+}
+
+.aurora-tbl + .aurora-tbl {
+  border-top: 1px solid var(--border);
+}
+
+.aurora-tbl.is-head {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text2);
+}
+
+.aurora-tbl + .aurora-tbl.is-head {
+  border-top: 0;
+}
+
+/* ---- Field inset (the "You pay" look) ---- */
+.aurora-field {
+  background: var(--field);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.aurora-field:focus-within {
+  border-color: var(--acc-bd);
+  background: color-mix(in srgb, var(--field) 70%, var(--acc-dim));
+}
+
+/* ---- Gradient word (landing H1 / emphasis) ---- */
+.grad-word {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 24px rgba(44, 224, 163, 0.35));
+}
+
+/* ---- Reduced motion: no component-level transitions ---- */
+@media (prefers-reduced-motion: reduce) {
+  .aurora-slider,
+  .aurora-field,
+  [data-aurora-animate] {
+    transition: none !important;
+  }
+}

@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { dirOf, isLocale, type Locale, locales } from '@/i18n/config';
 import { Deco } from '@/components/layout/Deco';
+import { Chrome } from '@/components/layout/Chrome';
 import { fontVars } from '@/lib/fonts';
 
 /** Static prerendering for both locales (no middleware yet — Phase 2 adds it). */
@@ -34,10 +35,15 @@ export default async function LocaleLayout({
     >
       <NextIntlClientProvider messages={messages}>
         {/* Persian prose switches by ONE variable (--font-fa); Latin stays Space Grotesk. */}
-        <body className={locale === 'fa' ? 'font-fa' : undefined}>
+        <body className={locale === 'fa' ? 'font-fa flex min-h-screen flex-col' : 'flex min-h-screen flex-col'}>
           {/* Aurora background layer — fixed, behind everything, never interactive. */}
           <Deco />
-          {children}
+          {/*
+            Shared chrome. Topnav/Footer live in <Chrome/> (client) so the active nav item can be
+            derived from the pathname while the components themselves stay prop-driven.
+            Phase 4: the landing page will opt out of the extra top spacing to fit 1440×900 (frame 01).
+          */}
+          <Chrome>{children}</Chrome>
         </body>
       </NextIntlClientProvider>
     </html>
