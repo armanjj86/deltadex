@@ -23,6 +23,8 @@
   html {
     background: var(--bg);
     color-scheme: dark;
+    /* reserve the scrollbar column so an open modal never nudges the layout */
+    scrollbar-gutter: stable;
   }
 
   body {

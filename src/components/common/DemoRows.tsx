@@ -23,8 +23,8 @@ const TEMPLATE = '46px minmax(0,1fr) 120px 120px 104px 24px';
 export function DemoRows({ rows, title, colsLabel }: { rows: DemoPoolRow[]; title?: ReactNode; colsLabel?: { pair: string; tvl: string; volume: string; apr: string } }): ReactNode {
   const head = colsLabel ?? { pair: 'Pair', tvl: 'TVL', volume: 'Volume 24h', apr: 'APR' };
   return (
-    <div>
-      {title ? <p className="mb-3 text-[13.5px] font-semibold">{title}</p> : null}
+    <div className="dd-tbl-shell">
+      {title ? <p className="mb-3 px-4 text-[13.5px] font-semibold">{title}</p> : null}
       <TableGrid template={TEMPLATE} head>
         <span />
         <TCell>{head.pair}</TCell>

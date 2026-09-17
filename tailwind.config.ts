@@ -18,6 +18,7 @@ const config: Config = {
         hair: 'var(--border)',
         text: 'var(--text)',
         text2: 'var(--text2)',
+        text3: 'var(--text3)',
         acc: 'var(--acc)',
         acc2: 'var(--acc2)',
         'acc-dim': 'var(--acc-dim)',

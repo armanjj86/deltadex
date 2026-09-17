@@ -263,6 +263,19 @@ store read fails, the UI falls back to the seed data silently.
   leaves of the Phase 1 gallery).
 - **No strings inside components.** Topnav / Footer / Modal / DemoRows take `labels` objects built from
   next-intl by the caller; a presentational component never reads a dictionary itself.
+- **Farsi mode must read as Farsi.** Anything a user can see goes through the dictionary; the only
+  Latin that stays in a Persian page is intentional (brand DELTA DEX, token symbols, veDELTA, CSS
+  variable names, font names in specimens). QA rule: paste the rendered text into a Latin-word count
+  and expect only that whitelist.
+- **Modal / overlay rules:** open+close are animated by CSS keyframes (`.dd-overlay`, `.dd-panel`,
+  ~210ms in / 150ms out, reduced-motion honoured). Scroll locking = `html.dd-lock-scroll` +
+  `scrollbar-gutter: stable` on `html`; **never** `body { overflow: hidden }` — that removed the
+  scrollbar and jumped the whole layout (most visible under the sticky topnav).
+- **Switch/Slider motion** is a `transform` on `.dd-switch-knob` (240ms, cubic-bezier(0.34,1.3,0.64,1))
+  — compositor-driven, mirrors itself in RTL; never animate `inset-inline-start`.
+- **Hairline table:** the row owns `padding-inline` (12px) and every cell 4px, so head and body edges
+  match by construction; numbers use an inner `.num` span instead of `.num` on the cell (a block-level
+  `direction: ltr` cell hugs the opposite column edge in RTL).
 - **Component inventory (Phase 1)** — all under `src/components/`:
   | component | file | key props |
   |---|---|---|
@@ -344,5 +357,9 @@ Document names in this repo (the master prompt used two idealised paths): the in
   SVG brand mark in `src/components/brand/`, `.aurora-*` CSS parts in `src/styles/ui.css`, temporary
   `/[locale]/ui-gallery` acceptance page, `src/lib/cn.ts` + `src/lib/format.ts` (date helpers pulled
   forward) + `src/lib/demo-persistence.ts` (dd.v1.* reset helper, used by the footer button).
-  New deps: `lucide-react@0.545.0`, `clsx@2.1.1` (both exact pins). `nav` + `footer` + `gallery`
+  New deps: `lucide-react@0.545.0`, `clsx@2.1.1` (both exact pins).
+  **Phase 1 QA round (user report):** gallery/landing fully re-localized (~25 new keys, incl. the
+  `prototype` chip → «پروتوتایپ»); modal enter/exit animation; scroll-lock rework (no more topnav
+  jump); smoother switch; `TCell` numeric + table padding fix for RTL column alignment; new token
+  `--text3` (disabled/decorative text) replaces `text-text2/50`. `nav` + `footer` + `gallery`
   sections added to both dictionaries; `footer.docs` = «راهنما» (new glossary-neutral label, review).

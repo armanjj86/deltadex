@@ -33,7 +33,8 @@ export function SwitchBase({
       // elements must never hand a freshly created function to a Client Component.
       {...(onChange ? { onClick: () => onChange(!checked) } : {})}
       className={cn(
-        'relative inline-flex shrink-0 items-center rounded-full border transition-[background-color,box-shadow] duration-150',
+        'relative inline-flex shrink-0 items-center rounded-full border',
+        'transition-[background-color,box-shadow] duration-200 ease-out',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--acc)]',
         disabled && 'opacity-50',
         !disabled && onChange && 'cursor-pointer',
@@ -46,13 +47,11 @@ export function SwitchBase({
         boxShadow: checked ? 'var(--glow-btn)' : 'inset 0 1px 2px rgba(0,0,0,.4)',
       }}
     >
+      {/* Position is static (inset-inline-start: 3px) and the travel is a transform, so the
+          slide animates on the compositor and mirrors itself in RTL (see .dd-switch-knob). */}
       <span
-        className={cn('absolute rounded-full bg-white transition-[inset-inline-start] duration-150')}
-        style={{
-          width: box.knob,
-          height: box.knob,
-          insetInlineStart: checked ? box.travel : (box.h - box.knob) / 2,
-        }}
+        className={cn('dd-switch-knob absolute rounded-full bg-white', checked && 'is-on')}
+        style={{ width: box.knob, height: box.knob }}
       />
     </button>
   );

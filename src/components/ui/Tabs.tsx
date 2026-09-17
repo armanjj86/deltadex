@@ -53,7 +53,7 @@ export function TabList({
               selected
                 ? 'bg-acc-dim text-acc border border-acc-bd'
                 : 'border border-transparent text-text2 hover:text-text',
-              item.disabled && 'opacity-50',
+              item.disabled && 'text-text3 hover:text-text3',
             )}
           >
             {item.icon}

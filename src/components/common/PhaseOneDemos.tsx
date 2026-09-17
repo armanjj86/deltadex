@@ -38,6 +38,8 @@ export interface DemoCopy {
   modalBody: string;
   modalClose: string;
   review: string;
+  closeLabel: string;
+  searchToken: string;
   lockTitle: string;
   yearsUnit: string;
 }
@@ -89,7 +91,7 @@ export function SwapDemo({ copy }: { copy: DemoCopy }): ReactNode {
           </Button>
         ) : null}
       </div>
-      <InputField className="mt-4" label={copy.search} placeholder="DELTA / WETH / 0x…" hint={copy.searchHint} />
+      <InputField className="mt-4" label={copy.searchToken} placeholder="DELTA / WETH / 0x…" hint={copy.searchHint} />
     </Card>
   );
 }

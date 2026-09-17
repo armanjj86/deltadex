@@ -74,13 +74,14 @@ export function TCell({
       className={cn(
         'tbl-cell min-w-0 truncate',
         ALIGN_CLASS[align],
-        numeric && 'num',
         strong && 'font-bold',
         muted && 'text-text2',
         className,
       )}
     >
-      {children}
+      {/* `numeric` isolates only the value, never the cell: putting `direction: ltr` on the block
+          itself made the value hug the opposite edge of its column in RTL (Phase 1 QA). */}
+      {numeric ? <span className="num">{children}</span> : children}
     </div>
   );
 }

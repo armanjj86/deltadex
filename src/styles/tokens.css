@@ -21,6 +21,7 @@
   /* Text */
   --text: #ecf5f0;
   --text2: #8ca09a;
+  --text3: rgba(236, 245, 240, 0.32); /* disabled / decorative (extension token, Phase 1) */
 
   /* Accents */
   --acc: #2ce0a3;

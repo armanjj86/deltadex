@@ -18,6 +18,7 @@ export default async function ScaffoldPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
+  const g = await getTranslations({ locale, namespace: 'gallery' });
 
   const stats = [
     { label: t('demo.delta'), value: `$${DEMO_STORY.token.priceUsd}`, delta: `+${DEMO_STORY.token.change24hPct}%` },
@@ -52,7 +53,7 @@ export default async function ScaffoldPage({
           </span>
           <span className="text-[19px] font-bold tracking-[-0.02em]">{t('brand.name')}</span>
           <span className="rounded-pill border border-acc-bd bg-acc-dim px-2 py-[3px] text-[10px] font-bold uppercase tracking-[0.08em] text-acc">
-            prototype
+            {g('prototypeLabel')}
           </span>
         </div>
         <nav className="flex items-center gap-2 text-[13px]">
