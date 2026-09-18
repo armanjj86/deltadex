@@ -62,3 +62,8 @@ mock implementation can later be replaced by an on-chain one without touching a 
 
 **Author:** Arman Jafari Naeimi — Computer Engineering, Yazd University
 **Project:** Use-case specification + interactive prototype (bilingual, RTL)
+
+---
+
+**راهنمای فارسیِ گام‌به‌گام برای تست (دستورهای `git pull` / `npm run dev` و آدرس صفحه‌ها):**
+[`docs/PLAYBOOK.md`](docs/PLAYBOOK.md)
