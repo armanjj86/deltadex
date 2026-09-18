@@ -162,7 +162,15 @@
     "heroGrad": "yours",
     "fontWeightsLabel": "Weights:",
     "heroTrailing": ".",
-    "durationNote": "Duration units come from the dictionary too — only the digits stay Latin."
+    "durationNote": "Duration units come from the dictionary too — only the digits stay Latin.",
+    "walletSection": "Wallet (Phase 3, live)",
+    "walletNote": "Same component the topbar uses: MetaMask (if installed) and the demo wallet connect for real, every state has explicit copy. Nothing is simulated by CSS here.",
+    "walletDisconnect": "Disconnect",
+    "walletMetaMask": "MetaMask",
+    "walletDemo": "Demo wallet",
+    "walletErrA": "show «extension missing»",
+    "walletErrB": "show «cancelled»",
+    "walletCopy": "toggle «copied»"
   },
   "format": {
     "heading": "Format & locale",
@@ -191,5 +199,38 @@
       "days": "d",
       "and": " "
     }
+  },
+  "wallet": {
+    "title": "Connect a wallet",
+    "subtitle": "Delta reads your public address only — it never sees keys or funds.",
+    "providers": "Choose a wallet",
+    "detected": "Detected",
+    "notDetected": "Not installed",
+    "install": "Install MetaMask",
+    "demo": "Demo wallet",
+    "demoNote": "Generates a local address so the whole product can be walked through without an extension.",
+    "outOfScope": "Out of scope for this prototype",
+    "security": "No private keys, no network calls. Everything you see is simulated on purpose.",
+    "close": "Close",
+    "connected": "Connected",
+    "network": "Network",
+    "unsupportedNetwork": "Unsupported network",
+    "switchHint": "Switch your wallet to Delta Chain (39547), Ethereum or Arbitrum.",
+    "addDeltaChain": "Add Delta Chain to my wallet",
+    "addedChain": "Network request sent to your wallet.",
+    "copy": "Copy address",
+    "copied": "Copied",
+    "disconnect": "Disconnect",
+    "watchToken": "Add DELTA to wallet",
+    "watched": "Token request sent to your wallet.",
+    "sign": "Sign a demo message",
+    "signed": "Signature verified.",
+    "signRejected": "Signature rejected in the wallet.",
+    "balances": "Balances (this network)",
+    "errRejected": "Connection cancelled. Connect a wallet to use the platform.",
+    "errNoExtension": "MetaMask was not detected. Install the extension, or continue with the demo wallet.",
+    "errOffline": "No internet connection. Check your network and try again.",
+    "errGeneric": "The wallet refused the request. Try once more.",
+    "retry": "Try again"
   }
 }

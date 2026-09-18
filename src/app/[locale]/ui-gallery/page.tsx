@@ -16,6 +16,7 @@ import { BrandLockup, BrandMark, HeroTitle, TokenGlyphRow, GasPill } from '@/com
 import { StatStrip } from '@/components/widgets/StatStrip';
 import { ProToolsBar } from '@/components/widgets/ProToolsBar';
 import { SwapDemo, LockModalDemo } from '@/components/common/PhaseOneDemos';
+import { WalletDemo } from '@/components/common/WalletDemo';
 import { DemoRows } from '@/components/common/DemoRows';
 import { DEMO_STORY, compactUsd, shortAddress } from '@/data/demo-story';
 import * as fmt from '@/lib/format';
@@ -32,6 +33,7 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
   const demo = await getTranslations({ locale, namespace: 'demo' });
   const f = await getTranslations({ locale, namespace: 'format' });
   const ft = await getTranslations({ locale, namespace: 'fonts' });
+  const w = await getTranslations({ locale, namespace: 'wallet' });
 
   const Section = ({ title, children }: { title: string; children: ReactNode }) => (
     <section className="mt-10">
@@ -193,6 +195,50 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
           </div>
           <p className="mt-4 text-[12px] leading-relaxed text-text3">{f('note')}</p>
         </Card>
+      </Section>
+
+      <Section title={t('walletSection')}>
+        <WalletDemo
+          strings={{
+            subtitle: w('subtitle'),
+            providers: w('providers'),
+            detected: w('detected'),
+            notDetected: w('notDetected'),
+            install: w('install'),
+            demo: w('demo'),
+            demoNote: w('demoNote'),
+            outOfScope: w('outOfScope'),
+            security: w('security'),
+            connected: w('connected'),
+            network: w('network'),
+            unsupportedNetwork: w('unsupportedNetwork'),
+            switchHint: w('switchHint'),
+            addDeltaChain: w('addDeltaChain'),
+            copy: w('copy'),
+            copied: w('copied'),
+            disconnect: w('disconnect'),
+            watchToken: w('watchToken'),
+            sign: w('sign'),
+            balances: w('balances'),
+            retry: w('retry'),
+          }}
+          errors={{
+            errRejected: w('errRejected'),
+            errNoExtension: w('errNoExtension'),
+            errOffline: w('errOffline'),
+            errGeneric: w('errGeneric'),
+          }}
+          labels={{
+            title: t('walletSection'),
+            note: t('walletNote'),
+            connectMetaMask: t('walletMetaMask'),
+            connectDemo: t('walletDemo'),
+            disconnect: t('walletDisconnect'),
+            errorA: t('walletErrA'),
+            errorB: t('walletErrB'),
+            copyState: t('walletCopy'),
+          }}
+        />
       </Section>
 
       <Section title={t('components')}>

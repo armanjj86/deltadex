@@ -38,12 +38,19 @@ export function Topnav({
   active = 'none',
   wallet = 'chip',
   labels,
+  walletNode,
 }: {
   locale: Locale;
   /** Which nav entry is highlighted (resolved by <Chrome/> from the pathname). */
   active?: NavId | 'none';
   /** Landing shows a Connect button (frame 01); app pages show the account chip (frame 02). */
   wallet?: 'chip' | 'connect';
+  /**
+   * Live wallet slot (Phase 3). When present it replaces the static connect button / account chip
+   * and owns its own state; the `wallet` prop then only picks its shape. Kept as a node so Topnav
+   * stays presentational and server-capable.
+   */
+  walletNode?: ReactNode;
   labels: TopnavLabels;
 }): ReactNode {
   const t = labels;
@@ -94,7 +101,8 @@ export function Topnav({
           locale={locale}
           labels={{ en: 'English', fa: labels.switchTo, hint: labels.switchHint }}
         />
-        {wallet === 'connect' ? (
+        {walletNode ??
+        (wallet === 'connect' ? (
           <Button size="md">{t.connect}</Button>
         ) : (
           <>
@@ -122,7 +130,7 @@ export function Topnav({
               </svg>
             </span>
           </>
-        )}
+        ))}
       </div>
     </header>
   );
