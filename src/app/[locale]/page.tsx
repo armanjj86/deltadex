@@ -24,8 +24,8 @@ export default async function ScaffoldPage({
   const t = await getTranslations();
   const g = await getTranslations({ locale, namespace: 'gallery' });
 
-  // Phase 2: count-like figures go through src/lib/format (Persian digits in `fa`); prices, the
-  // compact USD forms and the address stay Latin by contract.
+  // Phase 2: every figure goes through src/lib/format — Latin digits in both languages (user
+  // decision), only dates/calendars are locale-dependent.
   const stats = [
     { label: t('demo.delta'), value: `$${DEMO_STORY.token.priceUsd}`, delta: fmt.formatPct(DEMO_STORY.token.change24hPct) },
     { label: t('demo.tvl'), value: compactUsd(DEMO_STORY.tvlUsd) },

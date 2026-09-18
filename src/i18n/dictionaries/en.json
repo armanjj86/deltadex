@@ -5,7 +5,7 @@
   },
   "phase": {
     "title": "Phase 2 — language layer & formats",
-    "intro": "The scaffold, the Aurora component library and the locale pipeline are in place: the middleware resolves the language from the URL prefix or the NEXT_LOCALE cookie, the dictionary covers every visible string, and numbers/dates come from one formatting layer (Persian digits and the Jalali calendar in Farsi).",
+    "intro": "The scaffold, the Aurora component library and the locale pipeline are in place: the middleware resolves the language from the URL prefix or the NEXT_LOCALE cookie, the dictionary covers every visible string, and numbers/dates come from one formatting layer (Jalali calendar in Farsi, Latin digits everywhere).",
     "nextUp": "Next: Phase 3 — mock data (tokens, pools, proposals), zustand stores and the wallet connection (MetaMask or the demo chain)."
   },
   "tokens": {
@@ -76,7 +76,7 @@
   },
   "gallery": {
     "heading": "Component gallery",
-    "intro": "Phase 1 deliverable: every Aurora part, outside any page. It is not part of the product and will be removed once the real pages are approved.",
+    "intro": "One value, both locales. Digits are Latin in both (user decision: never localize numerals); what changes is the calendar and the date order. Prices, addresses and hashes stay Latin as always.",
     "typography": "Typography",
     "components": "Components",
     "chrome": "Shared chrome",
@@ -165,11 +165,11 @@
   },
   "format": {
     "heading": "Format & locale",
-    "intro": "One value, both locales. English is rendered with Latin digits; Farsi uses Persian digits, Persian thousands separators and the Jalali (Shomalī) calendar. Prices, addresses and hashes always stay Latin — that is a contract, not a leftover.",
+    "intro": "One value, both locales. Digits stay Latin + monospace everywhere; Farsi switches the calendar to Jalali and the date order. Prices, addresses and hashes are always Latin.",
     "colValue": "Kind",
     "colEn": "en",
     "colFa": "fa",
-    "note": "The middleware resolved this page from the locale prefix / NEXT_LOCALE cookie. Numbers and dates follow the locale; prices and addresses stay Latin.",
+    "note": "Switch language with the button in the top bar: the date becomes Jalali and the layout mirrors, but every number stays Latin.",
     "kind_counts": "Count",
     "kind_token": "Token amount",
     "kind_usd": "USD price",

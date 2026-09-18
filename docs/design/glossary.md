@@ -7,7 +7,13 @@
 > **Rules:**
 > - Prices are ALWAYS in USD, Western digits, LTR — never localized.
 > - Addresses/hashes are ALWAYS LTR monospace.
-> - Persian digits + Jalali dates are used in Farsi locale for all other numbers/dates.
+> - ~~Persian digits~~ + Jalali dates are used in Farsi locale for all other numbers/dates.
+>   *(superseded — see the correction below this list)*
+>
+> **Correction (Phase 2, user decision 2026-09-18):** Persian digits are NOT used — every numeral in
+> the Farsi UI is a Western digit in the same monospace face as English, because the Persian digit
+> glyphs did not match the Latin UI numerals. Jalali dates stay, written `1405/06/27` / `27 شهریور 1405`.
+>
 > - The user's brand voice: simple, clear, no Arabic-script diacritics (tashkeel), no «ی» with hamza.
 
 ---

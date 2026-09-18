@@ -6,33 +6,36 @@
  * Locked rules (docs/design/glossary.md + AURORA-DESIGN-PROMPT.md §۴):
  *  - USD prices and on-chain quantities (gas, ratios, addresses, hashes, token symbols) stay
  *    Western-digit, LTR, monospace (`.num` / `.mono`).
- *  - Count-like numbers inside Persian prose/stat labels use Persian digits + Persian separators.
+ *  - ALL digits stay Latin (Western), in Farsi too — explicit user decision (Phase 2 QA): numbers
+ *    are never localized, only the calendar and the text direction change. `formatNum` therefore
+ *    always formats with `en` grouping so the mono/tabular rhythm never breaks.
  *  - Dates: Gregorian for `en`; Jalali (Shomalī) for `fa`.
  *  - Never put a localized date/number through `.num` on a whole row — use `.num-line` for the row
  *    and isolate only the atomic token.
  */
 import type { Locale } from '@/i18n/routing';
 
-/** Latin→Persian digit map, for strings that must stay LTR (mono/numeric spans). */
-const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+/**
+ * The ONE number locale. Latin digits + `,` thousands separators in both languages — kept as a
+ * constant so nobody "fixes" a Farsi number by passing `locale` into `Intl.NumberFormat`.
+ * (Persian digits were tried in Phase 2 and rejected: Ray/Vazirmatn digit shapes did not match the
+ * Latin UI numerals, and tabular alignment read worse.)
+ */
+const NUM_LOCALE = 'en-GB';
 
-/** Replace ASCII digits (and optionally , . separators) with their Persian forms. */
-export function toFaDigits(input: string, opts: { separators?: boolean } = {}): string {
-  const withDigits = input.replace(/[0-9]/g, (d) => PERSIAN_DIGITS[Number(d)]);
-  return opts.separators ? withDigits.replace(/,/g, '٬').replace(/\./g, '٫') : withDigits;
-}
-
-/** Locale digits for a plain count: 41209 → "41,209" / «۴۱٬۲۰۹». */
-export function formatNum(value: number, locale: Locale, digits = 0): string {
-  return new Intl.NumberFormat(locale, {
+/** Plain count: 41209 → "41,209" in both locales. */
+export function formatNum(value: number, locale?: Locale, digits = 0): string {
+  void locale; // accepted for call-site symmetry; digits are deliberately never localized
+  return new Intl.NumberFormat(NUM_LOCALE, {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   }).format(value);
 }
 
 /** Token amount: trims trailing zeros (18290 → "18,290", 0.4218 → "0.4218"). */
-export function formatTokenAmount(value: number, locale: Locale, maxDigits = 4): string {
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: maxDigits }).format(value);
+export function formatTokenAmount(value: number, locale?: Locale, maxDigits = 4): string {
+  void locale;
+  return new Intl.NumberFormat(NUM_LOCALE, { maximumFractionDigits: maxDigits }).format(value);
 }
 
 /** USD price — ALWAYS en-US + Western digits, e.g. "$0.4218" (never localized). */
@@ -75,7 +78,7 @@ export function formatPct(value: number, digits = 1): string {
 export function formatDate(date: Date, locale: Locale): string {
   if (locale === 'fa') {
     // Persian dates follow the browser's notion of "today" (no UTC override on purpose).
-    return new Intl.DateTimeFormat('fa-IR-u-ca-persian-nu-arabext', {
+    return new Intl.DateTimeFormat('fa-IR-u-ca-persian-nu-latn', {
       weekday: 'long',
       year: 'numeric',
       month: '2-digit',
@@ -96,7 +99,7 @@ export function formatDate(date: Date, locale: Locale): string {
 /** Short absolute date for deadlines and table rows: "18 Sep" / «۱۴۰۴/۰۶/۲۷». */
 export function formatShortDate(date: Date, locale: Locale): string {
   if (locale === 'fa') {
-    return new Intl.DateTimeFormat('fa-IR-u-ca-persian-nu-arabext', {
+    return new Intl.DateTimeFormat('fa-IR-u-ca-persian-nu-latn', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -110,7 +113,7 @@ export function formatShortDate(date: Date, locale: Locale): string {
 /** Long Persian-friendly date with month names: "18 September 2026" / «۲۷ مرداد ۱۴۰۴». */
 export function formatDateLong(date: Date, locale: Locale): string {
   return locale === 'fa'
-    ? new Intl.DateTimeFormat('fa-IR-u-ca-persian-nu-arabext', {
+    ? new Intl.DateTimeFormat('fa-IR-u-ca-persian-nu-latn', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
@@ -123,9 +126,9 @@ export function formatDateLong(date: Date, locale: Locale): string {
       }).format(date);
 }
 
-/** 24h wall-clock time: "14:05" / «۱۴:۰۵» — deliberately the *browser* clock (no UTC override). */
+/** 24h wall-clock time: "14:05" in both locales (browser clock, never the build machine's). */
 export function formatTime(date: Date, locale: Locale): string {
-  return new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-GB', {
+  return new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR-u-nu-latn' : 'en-GB', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
@@ -135,7 +138,7 @@ export function formatTime(date: Date, locale: Locale): string {
 /** Date + time for history/notifications tables: "18 Sep 2026, 14:05" / «۱۴۰۴/۰۶/۲۷، ۱۴:۰۵». */
 export function formatDateTime(date: Date, locale: Locale): string {
   if (locale === 'fa') {
-    // Jalali short dates already carry the year: «۱۴۰۵/۰۶/۲۷، ۱۴:۰۵»
+    // Jalali short dates already carry the year: «1405/06/27، 14:05»
     return `${formatShortDate(date, locale)}، ${formatTime(date, locale)}`;
   }
   const day = new Intl.DateTimeFormat('en-GB', {

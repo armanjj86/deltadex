@@ -223,8 +223,9 @@ store read fails, the UI falls back to the seed data silently.
 - RTL mechanics: `dir` is set on `<html>` by `src/app/[locale]/layout.tsx`; components use **logical
   properties only** (`ms-/me-/ps-/pe-/text-start/inset-inline-*`); never `left-4`/`ml-4`.
   Icons/arrows that express direction flip with `rtl:rotate-180` (Tailwind's `rtl:` variant is available).
-- Numbers: Persian digits via `Intl.NumberFormat(locale)` **except** prices, which stay USD with
-  Western digits, and addresses/hashes, which are always monospace + LTR.
+- Numbers: **Latin (Western) digits everywhere, in Farsi too** — user decision at the end of
+  Phase 2 (Persian digits rendered in a different face than the Latin UI numerals and broke tabular
+  alignment). Prices stay USD-formatted, and addresses/hashes are always monospace + LTR.
 - Numeral classes (from `src/styles/tokens.css`) — use the right one or RTL breaks the rhythm:
   | class | direction | use |
   |---|---|---|
@@ -236,21 +237,20 @@ store read fails, the UI falls back to the seed data silently.
   pins the row to the far end of its column (the exact bug found in the Phase 0 handover).
   **Overflow rule:** `.num` never wraps, so any full address/hash rendered inside a padded card must
   carry `.num-wrap` as well (Phase 1 QA: the gallery address specimen stuck out of the card).
-- Dates: Gregorian for `en`; Jalali (Shomalī, `fa-IR-u-ca-persian-nu-arabext`) for `fa`, via
+- Dates: Gregorian for `en`; Jalali (Shomalī, `fa-IR-u-ca-persian-nu-latn` — Latin digits) for `fa`, via
   `src/lib/format.ts` helpers (Phase 2). Deadlines show relative time + absolute date.
 - **Formatting is only done through `src/lib/format.ts`** — feature pages must not call `Intl.*` or
   `toLocaleString` themselves, or the two locales drift apart per screen. The contract:
   | helper | `en` | `fa` | rule |
   |---|---|---|---|
-  | `formatNum` / `formatTokenAmount` | `41,209` | `۴۱٬۲۰۹` | Persian digits + `٬` separator |
+  | `formatNum` / `formatTokenAmount` | `41,209` | `41,209` | Latin digits in both (Phase 2 QA) |
   | `formatUsd` / `formatCompactUsd` | `$0.4218` / `$128.4M` | identical | **never localized** (`.num`) |
   | `formatPct` | `+12.4%` / `−1.1%` | identical | real minus sign `−`, Latin digits |
-  | `formatDate` / `formatShortDate` | `Fri, 18 Sep 2026` | `جمعه ۱۴۰۵/۰۶/۲۷` | numeric slash form in `fa` |
-  | `formatDateLong` | `18 September 2026` | `۲۷ شهریور ۱۴۰۵` | month names, for proposal deadlines |
-  | `formatTime` / `formatDateTime` | `14:05` / `18 Sep 2026, 14:05` | `۱۴:۰۵` / `۱۴۰۵/۰۶/۲۷، ۱۴:۰۵` | browser clock |
+  | `formatDate` / `formatShortDate` | `Fri, 18 Sep 2026` | `جمعه 1405/06/27` | numeric slash form in `fa` |
+  | `formatDateLong` | `18 September 2026` | `27 شهریور 1405` | month names, for proposal deadlines |
+  | `formatTime` / `formatDateTime` | `14:05` / `18 Sep 2026, 14:05` | `14:05` / `1405/06/27، 14:05` | browser clock |
   | `formatDuration` | `1y 6mo` | identical | veDELTA lock chips |
-  | `toFaDigits(s, {separators})` | — | — | escape hatch for strings built elsewhere |
-  `<LocaleText locale value latin separators>` wraps a formatted string (client-safe), `<NowLine>`
+  `<LocaleText locale value latin>` marks a formatted value (client-safe; `latin` applies `.num`), `<NowLine>`
   renders today/clock from the **browser** clock so prerendered builds never show the CI date.
 - `lang`/`dir` correctness beats cleverness: a page that renders LTR inside `dir="rtl"` is a bug.
 
@@ -286,6 +286,12 @@ store read fails, the UI falls back to the seed data silently.
   Phase 1 for `src/components/{ui,widgets}`, once in Phase 2 for `resolves /{locale}`.)
 - **No strings inside components.** Topnav / Footer / Modal / DemoRows take `labels` objects built from
   next-intl by the caller; a presentational component never reads a dictionary itself.
+- **Numbers are Latin.** In Farsi mode every digit — dates, counts, the year in the footer, the
+  field placeholder — is a Western digit. Persian digits are not used anywhere in the UI; the only
+  Farsi-specific formatting left is the Jalali calendar and the text direction.
+- **Every phase report ends with an explicit checklist table.** Each acceptance item is listed with
+  where to look (`route` + section) and its state, so nothing can be dropped between the master
+  prompt, `ARCHITECTURE.md` and the review message.
 - **Farsi mode must read as Farsi.** Anything a user can see goes through the dictionary; the only
   Latin that stays in a Persian page is intentional (brand DELTA DEX, token symbols, veDELTA, CSS
   variable names, font names in specimens). QA rule: paste the rendered text into a Latin-word count
