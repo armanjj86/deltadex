@@ -6,7 +6,7 @@
  * visible marker makes those distinguishable in a second: the marker changes with every phase/QA
  * commit, and the short SHA comes from the checkout that built the page.
  */
-export const BUILD_MARKER = 'فاز ۳ — کیف پول زنده | phase 3 wallet';
+export const BUILD_MARKER = 'فاز ۳ — کیف پول زنده + برچسب ساخت | phase 3 wallet + build stamp · 2';
 
 /* The sha shown in the footer IS the identity of the checkout — it cannot be hard-coded here,
    because committing that number changes the hash. Compare it with `git log --oneline -1`. */

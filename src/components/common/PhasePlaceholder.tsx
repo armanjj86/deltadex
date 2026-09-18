@@ -3,6 +3,7 @@ import { setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import type { Locale } from '@/i18n/routing';
 import type { ReactNode } from 'react';
+import { WalletStateBadge } from '@/components/wallet/WalletStateBadge';
 
 /**
  * Placeholder surface used by every unwired route until its phase arrives.
@@ -26,7 +27,12 @@ export async function PhasePlaceholder({
 
   return (
     <main className="relative z-10 mx-auto flex w-full max-w-[900px] flex-1 flex-col justify-center px-8 py-16">
-      <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-text2">{section}</p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-text2">{section}</p>
+        {/* Live proof that Phase 3 is wired into this route, not drawn: the topbar chip and this
+            badge read the same store. */}
+        <WalletStateBadge />
+      </div>
       <h1 className="mt-3 text-[27px] font-extrabold tracking-[-0.02em]">{t('phase.title')}</h1>
       <p className="mt-4 max-w-[60ch] text-[14px] text-text2">{t('phase.intro')}</p>
       <Link

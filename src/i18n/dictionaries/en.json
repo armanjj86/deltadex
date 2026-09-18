@@ -4,9 +4,9 @@
     "tagline": "Trade like it's yours."
   },
   "phase": {
-    "title": "Phase 2 — language layer & formats",
-    "intro": "The scaffold, the Aurora component library and the locale pipeline are in place: the middleware resolves the language from the URL prefix or the NEXT_LOCALE cookie, the dictionary covers every visible string, and numbers/dates come from one formatting layer (Jalali calendar in Farsi, Latin digits everywhere).",
-    "nextUp": "Next: Phase 3 — mock data (tokens, pools, proposals), zustand stores and the wallet connection (MetaMask or the demo chain)."
+    "title": "Phase 3 — wallet, stores & typed mock data",
+    "intro": "The scaffold, the Aurora component library and the locale pipeline are in place, and Phase 3 added the data side: a token registry, zustand stores persisted under dd.v1.*, and a real wallet connection (MetaMask when the extension exists, a persistent demo wallet when it does not). The topbar button and the modal are not a mock-up — connect and the address chip appears on every page.",
+    "nextUp": "Next: Phase 4 — the landing page as a real product screen (frame 01: live stats, asset rail, swap teaser), on top of the data layer built in Phase 3."
   },
   "tokens": {
     "heading": "Aurora tokens",
@@ -59,7 +59,7 @@
     "portfolio": "Portfolio",
     "docs": "Docs",
     "connect": "Connect Wallet",
-    "comingSoon": "Available from Phase 3 (wallet + settings)",
+    "comingSoon": "Settings popover: Phase 5",
     "switchTo": "Farsi",
     "switchHint": "Switch the interface language (layout mirrors to RTL)."
   },
@@ -108,7 +108,7 @@
     "openModal": "Open modal",
     "modalTitle": "Connect a wallet",
     "modalSubtitle": "Delta never accesses your private keys.",
-    "modalBody": "400px panel, radius 24, blur overlay, Escape and backdrop click close it, Tab is trapped inside. Wallet rows come in Phase 3.",
+    "modalBody": "400px panel, radius 24, blur overlay, Escape and backdrop click close it, Tab is trapped inside. The wallet rows below are live since Phase 3.",
     "modalClose": "Close",
     "review": "Review swap",
     "lockTitle": "veDELTA lock",
