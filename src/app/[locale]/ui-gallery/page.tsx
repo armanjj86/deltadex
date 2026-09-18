@@ -90,7 +90,9 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
           <Card>
             <CardHeader title="IBM Plex Mono" action={<Badge tone="neutral">{t('fontMonoNote')}</Badge>} />
             <p className="num mt-3 text-[26px] font-extrabold tracking-[-0.02em]">$128.4M</p>
-            <p className="num mt-1 text-[15px] font-bold">0x7A3f8C41bE9d2506aB1C7e5D0f83aA4129e5F9C2</p>
+            <p className="num num-wrap mt-1 text-[15px] font-bold" title="0x7A3f8C41bE9d2506aB1C7e5D0f83aA4129e5F9C2">
+              0x7A3f8C41bE9d2506aB1C7e5D0f83aA4129e5F9C2
+            </p>
             <p className="mt-4 space-y-1 text-[12px] text-text2">
               <span className="num block">+12.4% · −1.1%</span>
               <span className="num block">14 gwei · 0.0019 ETH</span>

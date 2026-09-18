@@ -104,6 +104,18 @@ body {
   unicode-bidi: isolate;
 }
 
+/**
+ * `.num-wrap` — modifier for a long atomic token (full 0x… address, tx hash) that must
+ * stay LTR/monospace but is allowed to break onto a second line instead of overflowing
+ * its card. Combine with `.num`; keep `.num` alone for values that must never break.
+ */
+.num-wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-break: strict;
+}
+
 /** Persian prose gets extra breathing room so descenders never clip. */
 [dir='rtl'] body,
 [dir='rtl'] .prose-fa {

@@ -230,8 +230,11 @@ store read fails, the UI falls back to the seed data silently.
   | `.num-line` | follows the page | a **row** of figures next to a Persian label (stat strip, table cell, amount): tabular mono, aligns to the inline start, mirrors naturally |
   | `.num` | forced LTR + isolate | an atomic token inside RTL prose (price `0.4218`, `128.4M`, ratio) that must never be re-ordered |
   | `.mono` | forced LTR + isolate | address, hash, `var(--x)` snippet |
+  | `.num-wrap` | (modifier) | long atomic tokens — full `0x…` address, tx hash — **inside a card**: allows a line break so they never overflow the frame; keep the shortened form (`0x7A3f…F9C2`) for one-line slots like the topnav chip |
   Never put `.num` on a whole row that also contains a percentage/label chip: `unicode-bidi: isolate`
   pins the row to the far end of its column (the exact bug found in the Phase 0 handover).
+  **Overflow rule:** `.num` never wraps, so any full address/hash rendered inside a padded card must
+  carry `.num-wrap` as well (Phase 1 QA: the gallery address specimen stuck out of the card).
 - Dates: Gregorian for `en`; Jalali (Shomalī, `fa-IR-u-ca-persian`) for `fa`, via
   `src/lib/format.ts` helpers (Phase 2). Deadlines show relative time + absolute date.
 - `lang`/`dir` correctness beats cleverness: a page that renders LTR inside `dir="rtl"` is a bug.
