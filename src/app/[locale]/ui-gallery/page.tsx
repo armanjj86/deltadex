@@ -31,6 +31,7 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
   const t = await getTranslations({ locale, namespace: 'gallery' });
   const demo = await getTranslations({ locale, namespace: 'demo' });
   const f = await getTranslations({ locale, namespace: 'format' });
+  const ft = await getTranslations({ locale, namespace: 'fonts' });
 
   const Section = ({ title, children }: { title: string; children: ReactNode }) => (
     <section className="mt-10">
@@ -154,7 +155,7 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
           <Card featured>
             <CardHeader title="Ray · --font-fa" action={<Badge tone="up">Vazirmatn fallback</Badge>} />
             <p className="mt-3 text-[20px] font-extrabold leading-loose tracking-[0]" style={{ fontFamily: 'var(--font-fa)' }}>
-              {t('fonts:faSample')}
+              {ft('faSample')}
             </p>
             <p className="mt-1 text-[13.5px] leading-loose text-text2" style={{ fontFamily: 'var(--font-fa)' }}>
               استخر نقدینگی · تعهدسپاری · مزرعه‌های کشت سود · پل بین‌زنجیره‌ای · حاکمیت · پورتفولیو

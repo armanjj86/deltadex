@@ -303,7 +303,10 @@ store read fails, the UI falls back to the seed data silently.
 - **Dictionary parity is checked by `npm run i18n:check`** (structural: same key paths in both JSONs,
   no leaked-key-looking strings, no unescaped ICU braces). next-intl renders a missing key as the key
   itself instead of throwing, so a typo like `t('faSample')` in the `gallery` namespace silently printed
-  `gallery.faSample` on the page — run the check after touching dictionaries or translation keys.
+  `gallery.faSample` on the page. The other classic: `t('fonts.faSample')` on a **namespaced** `t`
+  resolves `gallery.fonts.faSample`, not the top-level key — give the file a second translator
+  (`const ft = await getTranslations({ locale, namespace: 'fonts' })`). Both cases are now caught by the
+  script; run it after touching dictionaries or translation keys.
 - **Farsi mode must read as Farsi.** Anything a user can see goes through the dictionary; the only
   Latin that stays in a Persian page is intentional (brand DELTA DEX, token symbols, veDELTA, CSS
   variable names, font names in specimens). QA rule: paste the rendered text into a Latin-word count
