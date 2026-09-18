@@ -398,7 +398,7 @@ window.ethereum  ←  touched ONLY by src/services/wallet/injected.ts
 | 0 | Scaffold, tokens/fonts, `ARCHITECTURE.md`, locale routes | ✅ merged to `main` (PR #1) |
 | 1 | Aurora component library + Topnav/Footer + SVG brand | ✅ merged to `main` (PR #2, + QA rounds) |
 | 2 | next-intl middleware, dictionaries, RTL/format helpers, locale switcher | ✅ merged to `main` (PR #4, + QA: Latin digits, duration units, slogan gradient, mono specimen width) |
-| 3 | Mock data + stores + wallet (MetaMask/demo) + MockTransactionService wiring | ✅ built — in review (PR #5) |
+| 3 | Mock data + stores + wallet (MetaMask/demo) + MockTransactionService wiring | ✅ on `main` — in review (no PR: it landed with the Phase-2 approval push; full checklist in `docs/phases/phase-3-wallet.md`) |
 | 4 | Landing `/` (frame 01) | planned |
 | 5 | Swap (ch02, UC-05…10) | planned |
 | 6 | Pools + liquidity + IL calculator (ch03) | planned |
