@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { BrandMark } from '@/components/brand/Brand';
 import { ResetDemoButton } from '@/components/layout/ResetDemoButton';
+import { BuildStamp } from '@/components/common/BuildStamp';
 
 /**
  * Footer (frame 01): muted single row — copy + prototype note + Reset demo on the inline start,
@@ -34,6 +35,7 @@ export function Footer({ labels }: { labels: FooterLabels }): ReactNode {
           {t.prototypeBadge}
         </span>
         <ResetDemoButton label={t.reset} confirmLabel={t.resetConfirm} />
+        <BuildStamp />
         <nav className="ms-auto flex items-center gap-5">
           {links.map((label) => (
             <span key={label} title={t.linkHint} className="cursor-default transition-colors hover:text-text">

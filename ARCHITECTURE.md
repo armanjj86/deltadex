@@ -220,6 +220,15 @@ footer ("Reset demo") so the presenter can start clean. Hydration is guarded (`s
 pattern / mounted flag) — no flash, no mismatch, and **no loading screen may ever hang**: if a
 store read fails, the UI falls back to the seed data silently.
 
+### 6.0 · Build stamp (footer) — proof the checkout is current
+
+`src/lib/build-stamp.ts` exports `BUILD_MARKER` (a string bumped in the **same commit** as any
+visible change) and `next.config.mjs` injects `NEXT_PUBLIC_BUILD_SHA` from the working copy. The
+footer renders both plus the live wallet state, because in Phase 3 QA «the wallet work is missing»
+turned out to be a stale checkout / stale `.next` on the reviewer's laptop — one glance at the stamp
+settles it. Rule: every phase or QA round that changes what the browser shows **must** bump
+`BUILD_MARKER`.
+
 ### 6.1 · Wallet plumbing (Phase 3, live)
 
 ```

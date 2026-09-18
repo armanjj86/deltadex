@@ -72,7 +72,12 @@
     "audit": "Audit report",
     "bounty": "Bug bounty",
     "linkHint": "Decorative in the prototype (no external links)",
-    "docs": "Docs"
+    "docs": "Docs",
+    "stampWallet": "wallet",
+    "stampWalletOn": "connected",
+    "stampWalletOff": "not connected",
+    "stampWalletHint": "the topbar button and this line read the same live state",
+    "stampDirty": "uncommitted"
   },
   "gallery": {
     "heading": "Component gallery",
