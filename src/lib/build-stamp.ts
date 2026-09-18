@@ -8,8 +8,8 @@
  */
 export const BUILD_MARKER = 'فاز ۳ — کیف پول زنده | phase 3 wallet';
 
-/** Written in the same commit that shipped this stamp, so a glance at the footer names the checkout. */
-export const BUILD_EXPECTED_SHA = '17edfa9';
+/* The sha shown in the footer IS the identity of the checkout — it cannot be hard-coded here,
+   because committing that number changes the hash. Compare it with `git log --oneline -1`. */
 
 /** In production the SHA is inlined by `next build`; in dev `next dev` provides it too. */
 export const BUILD_SHA: string = process.env.NEXT_PUBLIC_BUILD_SHA || 'dev';
