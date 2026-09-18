@@ -10,7 +10,7 @@ import { WalletModalView, type WalletErrorKey } from './WalletModalView';
 import { useBalances } from '@/store/balances';
 import { useWallet } from '@/store/wallet';
 import { wallet } from '@/services/wallet/binding';
-import { DEMO_STORY } from '@/data/demo-story';
+import { onWalletModalRequest } from '@/services/wallet/ui-events';
 import { TOKENS, type Token } from '@/data/tokens';
 import type { WalletProviderId, WalletProviderInfo } from '@/services/wallet/types';
 
@@ -38,15 +38,29 @@ export function WalletSection({ mode }: { mode: 'chip' | 'connect' }): React.Rea
   const [copied, setCopied] = useState(false);
 
   // Providers are detected after mount — a prerendered page must never claim «Detected».
+  // Providers are detected after mount — a prerendered page must never claim «Detected».
+  // If detection itself fails we still offer the demo wallet, so the modal is never a dead end.
   useEffect(() => {
     let alive = true;
-    wallet.detect().then((list) => {
-      if (alive) setProviders(list);
-    });
+    wallet
+      .detect()
+      .then((list) => {
+        if (alive) setProviders(list);
+      })
+      .catch(() => {
+        if (alive) {
+          setProviders([
+            { id: 'demo', name: 'Demo wallet', available: true, installed: true, note: 'no-extension-needed' },
+          ]);
+        }
+      });
     return () => {
       alive = false;
     };
   }, []);
+
+  // The gallery block asks for this very modal through a window event (one wallet, two entry points).
+  useEffect(() => onWalletModalRequest(() => setOpen(true)), []);
 
   const connect = useCallback(
     async (id: WalletProviderId) => {
@@ -142,7 +156,7 @@ export function WalletSection({ mode }: { mode: 'chip' | 'connect' }): React.Rea
             <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" />
           </svg>
         }
-        title={DEMO_STORY.wallet.address.length > 0 ? connected.address : undefined}
+        title={connected.address}
         {...{ onClick: () => setOpen(true) }}
       >
         <span className="num font-medium">
@@ -166,6 +180,13 @@ export function WalletSection({ mode }: { mode: 'chip' | 'connect' }): React.Rea
       >
         <div className="pt-1" onAnimationEnd={() => setNotice(null)}>
           <WalletModalView
+            liveNote={
+              connected
+                ? connected.isDemo
+                  ? `${t('statusConnectedDemo')} · ${connected.address.slice(0, 6)}…${connected.address.slice(-4)}`
+                : `${t('statusConnectedReal')} · ${connected.address.slice(0, 6)}…${connected.address.slice(-4)}`
+                : t('statusNone')
+            }
             providers={providers}
             wallet={connected}
             error={error}

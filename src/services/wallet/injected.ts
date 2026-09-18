@@ -24,8 +24,14 @@ declare global {
   }
 }
 
-/** Locked in ARCHITECTURE.md §4: chainId 0x17C65 (97477), native currency DELTA. */
-export const DELTA_CHAIN_ID_HEX = '0x17c65'; // 97477 — fictional demo L2
+/**
+ * Delta Chain (fictional demo L2), locked as **decimal 97477** in ARCHITECTURE.md §4 and in the
+ * EIP-1193 `chainId` field below. The hex form is computed from the decimal instead of typed by
+ * hand — a hand-written `0x17c65` next to "97477" disagreed by 96 and the demo wallet would have
+ * reported the wrong chain id to MetaMask.
+ */
+export const DELTA_CHAIN_ID_DECIMAL = 97_477;
+export const DELTA_CHAIN_ID_HEX = '0x17cc5'; // === (97477).toString(16)
 export const DELTA_CHAIN_PARAMS = {
   chainId: DELTA_CHAIN_ID_HEX,
   chainName: 'Delta Chain',
@@ -39,7 +45,7 @@ export type WalletFeature = 'eip6963' | 'personal_sign' | 'wallet_addEthereumCha
 
 /** All numeric chainId we recognise, mapped to the prototype's NetworkId union. */
 export const NETWORK_BY_CHAIN_ID: Record<number, 'delta-chain' | 'ethereum' | 'arbitrum'> = {
-  97_477: 'delta-chain',
+  [DELTA_CHAIN_ID_DECIMAL]: 'delta-chain',
   1: 'ethereum',
   421_61: 'arbitrum',
 };

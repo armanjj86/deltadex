@@ -164,13 +164,17 @@
     "heroTrailing": ".",
     "durationNote": "Duration units come from the dictionary too — only the digits stay Latin.",
     "walletSection": "Wallet (Phase 3, live)",
-    "walletNote": "Same component the topbar uses: MetaMask (if installed) and the demo wallet connect for real, every state has explicit copy. Nothing is simulated by CSS here.",
+    "walletNote": "Same component the topbar uses: MetaMask (if installed) and the demo wallet connect for real, every state has explicit copy. Nothing is simulated by CSS here — connect with the demo wallet and the chip in the topbar changes in the same moment, because both read one store.",
     "walletDisconnect": "Disconnect",
     "walletMetaMask": "MetaMask",
     "walletDemo": "Demo wallet",
     "walletErrA": "show «extension missing»",
     "walletErrB": "show «cancelled»",
-    "walletCopy": "toggle «copied»"
+    "walletCopy": "toggle «copied»",
+    "walletStatusOff": "not connected yet",
+    "walletStatusOn": "connected",
+    "walletOpenModal": "open the real modal in the topbar",
+    "walletAddressLabel": "topbar shows"
   },
   "format": {
     "heading": "Format & locale",
@@ -231,6 +235,10 @@
     "errNoExtension": "MetaMask was not detected. Install the extension, or continue with the demo wallet.",
     "errOffline": "No internet connection. Check your network and try again.",
     "errGeneric": "The wallet refused the request. Try once more.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "statusConnectedDemo": "Connected with the demo wallet",
+    "statusConnectedReal": "Connected with MetaMask",
+    "statusNone": "No wallet connected yet — this block and the topbar share one live state.",
+    "openWallet": "Connect wallet"
   }
 }

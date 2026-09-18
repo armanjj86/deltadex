@@ -1,4 +1,5 @@
 import {
+  DELTA_CHAIN_ID_DECIMAL,
   DELTA_CHAIN_PARAMS,
   NETWORK_BY_CHAIN_ID,
   getInjected,
@@ -23,12 +24,30 @@ import type { ConnectedWallet, WalletProviderId, WalletProviderInfo, WalletServi
 const DEMO_ADDRESS_KEY = 'dd.v1.demo-address';
 const SESSION_KEY = 'dd.v1.wallet';
 
+/** localStorage can throw outright (private mode / blocked cookies) — never let that bubble. */
+function readKey(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeKey(key: string, value: string | null): void {
+  try {
+    if (value === null) window.localStorage.removeItem(key);
+    else window.localStorage.setItem(key, value);
+  } catch {
+    /* blocked storage: the value simply is not remembered (the session still works in-tab) */
+  }
+}
+
 function demoAddress(): string {
   if (typeof window === 'undefined') return '0x7A3f8C41bE9d2506aB1C7e5D0f83aA4129e5F9C2';
-  const stored = window.localStorage.getItem(DEMO_ADDRESS_KEY);
-  if (stored) return stored;
+  const stored = readKey(DEMO_ADDRESS_KEY);
+  if (stored && /^0x[0-9a-fA-F]{40}$/.test(stored)) return stored;
   const generated = mockAddress(20260918);
-  window.localStorage.setItem(DEMO_ADDRESS_KEY, generated);
+  writeKey(DEMO_ADDRESS_KEY, generated);
   return generated;
 }
 
@@ -42,11 +61,30 @@ export class MockWalletService implements WalletService {
 
   /* ---- store binding: the service owns the connection, React only mirrors it ---- */
 
-  /** `useSyncExternalStore` glue — synchronous so a refresh never renders "disconnected" first. */
+  /**
+   * `useSyncExternalStore` glue — synchronous so a refresh never renders "disconnected" first.
+   * Provider events are attached ONCE (first subscriber) and detached with the last one, so
+   * remounting the topbar slot cannot stack duplicate `chainChanged` listeners.
+   */
+  private providerOff: (() => void) | null = null;
+
+  /** The React listener is registered in `listeners` so provider events reach it; React then
+      re-reads `getSnapshot()` (arguments are ignored by `useSyncExternalStore`). */
   subscribe = (listener: () => void): (() => void) => {
-    const unsubscribe = this.onChange(() => listener());
-    this.listeners.add(() => {}); // keeps onChange's provider subscription alive
-    return unsubscribe;
+    const noop = listener;
+    this.listeners.add(noop);
+    this.providerOff ??= subscribeToProvider(async () => {
+      // Refresh the account/chain from the extension, then notify: getSnapshot() must never be stale.
+      await this.account(/* recheck */ true);
+      this.emit();
+    }, ['accountsChanged', 'chainChanged']);
+    return () => {
+      this.listeners.delete(noop);
+      if (this.listeners.size === 0) {
+        this.providerOff?.();
+        this.providerOff = null;
+      }
+    };
   };
 
   getSnapshot = (): ConnectedWallet | null => {
@@ -77,7 +115,7 @@ export class MockWalletService implements WalletService {
       const wallet: ConnectedWallet = {
         provider: 'demo',
         address: demoAddress(),
-        chainId: 97_477,
+        chainId: DELTA_CHAIN_ID_DECIMAL,
         network: 'delta-chain',
         isDemo: true,
         connectedAt: Date.now(),
@@ -112,23 +150,39 @@ export class MockWalletService implements WalletService {
     this.set(null);
   }
 
-  async account(): Promise<ConnectedWallet | null> {
-    if (this.current && this.current !== 'unread') return this.current as ConnectedWallet;
-    this.current = readSession();
-    if (this.current) return this.current as ConnectedWallet;
+  /**
+   * `recheck` is what an extension event (`accountsChanged` / `chainChanged`) asks for: read the
+   * provider again, do NOT trust the cached session — otherwise a network switch inside MetaMask
+   * would be swallowed and the topbar would keep showing the old chain.
+   */
+  async account(recheck = false): Promise<ConnectedWallet | null> {
+    if (!recheck) {
+      if (this.current && this.current !== 'unread') return this.current as ConnectedWallet;
+      const stored = readSession();
+      this.current = stored;
+      if (stored) return stored;
+    }
+    const current = this.current === 'unread' ? null : (this.current as ConnectedWallet | null);
     const accounts = await tryRequest<string[]>('eth_accounts');
-    if (!accounts.ok || !accounts.value?.length) return null;
+    if (!accounts.ok || !accounts.value?.length) {
+      // No account (or no extension): keep a demo session alive, otherwise mark ourselves offline.
+      if (current?.isDemo) return current;
+      this.set(null);
+      return null;
+    }
     const chainIdHex = await tryRequest<string>('eth_chainId');
     const hex = chainIdHex.ok ? chainIdHex.value : '0x1';
-    this.current = {
+    const next: ConnectedWallet = {
       provider: 'metamask',
       address: accounts.value[0],
       chainId: Number.parseInt(hex, 16),
       network: await networkOf(hex),
       isDemo: false,
-      connectedAt: Date.now(),
+      connectedAt: current?.connectedAt ?? Date.now(),
     };
-    return this.current;
+    if (current && sameWallet(current, next)) return current; // no-op event: keep the reference stable
+    this.set(next);
+    return next;
   }
 
   async addDeltaChainNetwork(): Promise<void> {
@@ -156,22 +210,25 @@ export class MockWalletService implements WalletService {
 
   onChange(listener: (wallet: ConnectedWallet | null) => void): () => void {
     this.listeners.add(listener);
-    const unsubscribe = subscribeToProvider(async () => {
-      const next = await this.account();
-      this.set(next, /* silent */ true);
-    }, ['accountsChanged', 'chainChanged']);
     return () => {
       this.listeners.delete(listener);
-      unsubscribe();
     };
   }
 
-  private set(wallet: ConnectedWallet | null, silent = false): void {
+  private set(wallet: ConnectedWallet | null): void {
     this.current = wallet;
     writeSession(wallet);
-    if (!silent) for (const listener of this.listeners) listener(wallet);
-    else for (const listener of this.listeners) listener(wallet);
+    this.emit();
   }
+
+  private emit(): void {
+    const snapshot = this.current === 'unread' ? null : (this.current as ConnectedWallet | null);
+    for (const listener of this.listeners) listener(snapshot);
+  }
+}
+
+function sameWallet(a: ConnectedWallet, b: ConnectedWallet): boolean {
+  return a.address === b.address && a.chainId === b.chainId && a.network === b.network && a.provider === b.provider;
 }
 
 /**
@@ -182,7 +239,7 @@ export class MockWalletService implements WalletService {
 function readSession(): ConnectedWallet | null {
   if (typeof window === 'undefined') return null;
   try {
-    const raw = window.localStorage.getItem(SESSION_KEY);
+    const raw = readKey(SESSION_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as ConnectedWallet & { state?: ConnectedWallet };
     const wallet = (parsed as { state?: ConnectedWallet }).state ?? parsed;
@@ -195,10 +252,5 @@ function readSession(): ConnectedWallet | null {
 
 function writeSession(wallet: ConnectedWallet | null): void {
   if (typeof window === 'undefined') return;
-  try {
-    if (wallet) window.localStorage.setItem(SESSION_KEY, JSON.stringify({ state: wallet }));
-    else window.localStorage.removeItem(SESSION_KEY);
-  } catch {
-    /* blocked storage: the session simply is not remembered */
-  }
+  writeKey(SESSION_KEY, wallet ? JSON.stringify({ state: wallet }) : null);
 }

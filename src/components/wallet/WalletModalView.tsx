@@ -54,6 +54,7 @@ export function WalletModalView({
   copied,
   balances,
   strings,
+  liveNote,
   errors,
   onConnect,
   onDisconnect,
@@ -69,6 +70,8 @@ export function WalletModalView({
   copied: boolean;
   balances: { symbol: string; amount: number }[];
   strings: WalletStrings;
+  /** Plain text (no markup, no callback) describing the live state — see §6.1 in ARCHITECTURE.md. */
+  liveNote?: string;
   /** Plain record, not a function: this component receives props from a server component, and
       functions cannot cross the RSC boundary (ARCHITECTURE.md §8). */
   errors: Record<Exclude<WalletErrorKey, null>, string>;
@@ -81,10 +84,26 @@ export function WalletModalView({
 }): ReactNode {
   const t = strings;
 
+  /**
+   * Live-state strip. It is deliberately the FIRST thing in both views so nobody (professor
+   * included) can mistake this UI for a static mock-up: it names the provider and repeats the
+   * address the topbar currently shows.
+   */
+  const note = liveNote ? (
+    <p
+      className="flex items-start gap-2 rounded-[12px] border border-hair bg-field px-3 py-2 text-[11.5px] leading-relaxed text-text2"
+      aria-live="polite"
+    >
+      <span aria-hidden className={'mt-[6px] size-1.5 shrink-0 rounded-full ' + (wallet ? 'bg-acc' : 'bg-text2/55')} />
+      <span className="min-w-0 break-words">{liveNote}</span>
+    </p>
+  ) : null;
+
   if (wallet) {
     const unsupported = wallet.network === 'unsupported';
     return (
       <div className="space-y-4">
+        {note}
         <div className="rounded-[14px] border border-acc-bd bg-acc-dim p-3.5">
           <div className="flex items-center gap-2">
             <span
@@ -181,6 +200,7 @@ export function WalletModalView({
 
   return (
     <div className="space-y-4">
+      {note}
       <p className="text-[12.5px] leading-relaxed text-text2">{t.subtitle}</p>
 
       {error ? (

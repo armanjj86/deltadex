@@ -150,7 +150,10 @@ addDeltaChainNetwork() · onChange()`.
   (`src/lib/hex.ts`), persists it under `dd.v1.wallet`, and behaves exactly like a connected wallet.
   `connectedAt`/`isDemo` flags let the UI label it "Demo wallet".
 - Optional demo moment: `addDeltaChainNetwork()` calls `wallet_addEthereumChain` with
-  chainId `0x17C65` (97477), name "Delta Chain", currency `DELTA`, fake RPC `https://rpc.delta.exchange`
+  chainId `97477` (hex `0x17cc5` — **computed** by `(97477).toString(16)`, never typed by hand: a
+  hand-written `0x17c65` in an earlier draft was 96 off, and `NETWORK_BY_CHAIN_ID` now shares the
+  same constant so the store, the params and the mapping cannot disagree), name "Delta Chain",
+  currency `DELTA`, fake RPC `https://rpc.delta.exchange`
   (never contacted; MetaMask will warn it cannot verify — that is fine on testnet-less demo). Behind a
   button in the wallet modal, opt-in, one line in the UI.
 
@@ -236,7 +239,8 @@ window.ethereum  ←  touched ONLY by src/services/wallet/injected.ts
 - Every wallet failure is copy, not a crash: `errRejected · errNoExtension · errOffline · errGeneric`
   (the alternative flows of ch01). The demo wallet is always available, so no screen depends on an
   extension being installed.
-- Delta Chain params are exactly as locked in §4: `0x17c65` (97477), native `DELTA`, RPC
+- Delta Chain params are exactly as locked in §4: `97477` / `0x17cc5` (single source:
+  `DELTA_CHAIN_ID_DECIMAL`), native `DELTA`, RPC
   `https://rpc.delta.exchange` (never contacted — MetaMask's "cannot verify" warning is expected).
 - `WalletModalView` takes a **plain `errors` record**, never a callback: functions cannot cross the RSC
   boundary (§8) — hit again in Phase 3 by `errorCopy={(key) => …}`.

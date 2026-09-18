@@ -171,6 +171,12 @@ export function daysUntil(date: Date, now: Date = new Date()): number {
  * Lock-duration vocabulary of the veDELTA UI. Digits are always Latin (Phase 2 QA decision); the
  * unit labels come from the caller, so `fa` can render «1 سال و 6 ماه» without this layer ever
  * hard-coding a Persian word (the dictionaries stay the single source of strings).
+ *
+ * LOCALE CONTRACT (Phase 3 QA — a previous draft swapped these two):
+ *   en → compact units { year:'y', months:'mo', days:'d' }           → "1y 6mo"
+ *   fa → `format.kind_duration_units` from fa.json                   → "1 سال و 6 ماه"
+ * The Persian vocabulary belongs to the Persian column ONLY — never feed `kind_duration_units`
+ * (fa.json) to the English sample.
  */
 export function formatDuration(
   days: number,

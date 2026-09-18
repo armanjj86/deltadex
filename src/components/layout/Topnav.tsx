@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Settings2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import { DEMO_STORY, shortAddress } from '@/data/demo-story';
 import type { Locale } from '@/i18n/routing';
 import { BrandLockup, GasPill } from '@/components/brand/Brand';
 import { Tooltip } from '@/components/ui/Tooltip';
@@ -13,9 +12,13 @@ export type NavId = 'trade' | 'pools' | 'stake' | 'farm' | 'bridge' | 'governanc
 
 /**
  * Topnav (72px, padding 0 56px) — frames 01/02.
- * Phase 1 = visuals + working links only: the gas pill, network chip and wallet chip render the
- * canonical demo story and are NOT interactive yet (Phase 3 connects MetaMask and the wallet modal;
- * Phase 11 adds the notification bell). RTL mirrors for free because every gap uses logical props.
+ *
+ * Since Phase 3 the wallet slot is **live**: `<Chrome/>` passes `walletNode={<WalletSection/>}`,
+ * which reads the connection from `dd.v1.wallet`. The static Phase-1 account chip (a hard-coded
+ * `0x7A3f…F9C2` that pretended to be connected) was **deleted** so no screen can ever show a fake
+ * connection — when nothing is connected the slot is a real «Connect wallet» button.
+ * The gas pill and the settings entry stay presentational (settings popover = Phase 5, notification
+ * bell = Phase 11). RTL mirrors for free because every gap uses logical props.
  */
 export interface TopnavLabels {
   trade: string;
@@ -43,12 +46,14 @@ export function Topnav({
   locale: Locale;
   /** Which nav entry is highlighted (resolved by <Chrome/> from the pathname). */
   active?: NavId | 'none';
-  /** Landing shows a Connect button (frame 01); app pages show the account chip (frame 02). */
+  /** Which shape the live slot should take: landing = connect button (frame 01), app pages =
+      account chip that becomes a button when nothing is connected (frame 02). */
   wallet?: 'chip' | 'connect';
   /**
-   * Live wallet slot (Phase 3). When present it replaces the static connect button / account chip
-   * and owns its own state; the `wallet` prop then only picks its shape. Kept as a node so Topnav
-   * stays presentational and server-capable.
+   * Live wallet slot (Phase 3, injected by `<Chrome/>` as `<WalletSection/>`). It owns its own
+   * state and reads the connection from `dd.v1.wallet`. Kept as a node so Topnav stays
+   * presentational and server-capable; if it is absent (gallery / isolated preview) the slot
+   * degrades to a non-live button — never to a fake "connected" chip.
    */
   walletNode?: ReactNode;
   labels: TopnavLabels;
@@ -101,36 +106,18 @@ export function Topnav({
           locale={locale}
           labels={{ en: 'English', fa: labels.switchTo, hint: labels.switchHint }}
         />
-        {walletNode ??
-        (wallet === 'connect' ? (
-          <Button size="md">{t.connect}</Button>
-        ) : (
-          <>
-            <GasPill />
-            <Tooltip content={t.comingSoon}>
-              <span
-                className="grid size-9 place-items-center rounded-pill border border-hair bg-surface text-text2"
-                aria-disabled="true"
-              >
-                <Settings2 className="size-4" aria-hidden />
-              </span>
-            </Tooltip>
-            <span
-              className="inline-flex h-9 items-center gap-2.5 rounded-pill border border-hair bg-surface ps-1.5 pe-3 text-[12.5px]"
-              title={DEMO_STORY.wallet.address}
-            >
-              <span
-                aria-hidden
-                className="size-6 rounded-full"
-                style={{ background: 'conic-gradient(from 210deg, var(--acc), var(--acc2) 45%, #0b1411 78%, var(--acc))' }}
-              />
-              <span className="num text-[12.5px] font-medium">{shortAddress(DEMO_STORY.wallet.address)}</span>
-              <svg viewBox="0 0 10 6" width="9" height="6" aria-hidden className="text-text2">
-                <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-              </svg>
-            </span>
-          </>
-        ))}
+        {/* Gas + settings are always present; only the wallet slot is live (it used to be hidden
+            behind the static chip, which made the whole cluster look like a mock-up). */}
+        <GasPill />
+        <Tooltip content={t.comingSoon}>
+          <span
+            className="grid size-9 place-items-center rounded-pill border border-hair bg-surface text-text2"
+            aria-disabled="true"
+          >
+            <Settings2 className="size-4" aria-hidden />
+          </span>
+        </Tooltip>
+        {walletNode ?? <Button size="md">{t.connect}</Button>}
       </div>
     </header>
   );

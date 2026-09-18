@@ -1,24 +1,33 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardHeader } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { Card, CardHeader } from '@/components/ui/Card';
 import { WalletModalView, type WalletErrorKey } from '@/components/wallet/WalletModalView';
 import { wallet } from '@/services/wallet/binding';
+import { requestWalletModal } from '@/services/wallet/ui-events';
 import { useWallet } from '@/store/wallet';
 import { TOKENS } from '@/data/tokens';
 import type { WalletProviderId, WalletProviderInfo } from '@/services/wallet/types';
 
 /**
- * Gallery half of Phase 3 (temporary, removed in Phase 12): the wallet modal rendered *inline* so
+ * Gallery half of Phase 3 (temporary, removed in Phase 12): the *real* wallet view rendered inline so
  * every state can be eyeballed at once — provider detection, demo connect, the real MetaMask path,
- * and each error copy. Buttons drive the real service, so «Connect» here actually opens MetaMask.
- * Strings arrive from the page (server) — a client file never reads a dictionary directly here.
+ * and each error copy.
+ *
+ * It is not a second, pretend wallet: it drives the same `MockWalletService` singleton the topbar
+ * uses, so connecting here also changes the topbar chip (and the header badge below proves it by
+ * reading `useWallet()` — the same store the topnav reads). «open the real modal» raises the modal
+ * from the topbar instead of a copy of it.
+ *
+ * Strings arrive from the page (server); a client file never reads a dictionary directly here.
  */
 export function WalletDemo({
   strings,
   errors,
   labels,
+  status,
 }: {
   strings: React.ComponentProps<typeof WalletModalView>['strings'];
   errors: Record<Exclude<WalletErrorKey, null>, string>;
@@ -31,7 +40,14 @@ export function WalletDemo({
     errorA: string;
     errorB: string;
     copyState: string;
+    /** Live-state line, read from the store (not hard-coded). */
+    statusOff: string;
+    statusOn: string;
+    addressLabel: string;
+    openModal: string;
   };
+  /** Live-state sentences, from the `wallet` namespace. */
+  status: { none: string; demo: string; real: string };
 }): React.ReactNode {
   const [providers, setProviders] = useState<WalletProviderInfo[]>([]);
   const [busy, setBusy] = useState<WalletProviderId | null>(null);
@@ -41,7 +57,18 @@ export function WalletDemo({
 
   useEffect(() => {
     let alive = true;
-    wallet.detect().then((list) => alive && setProviders(list));
+    wallet
+      .detect()
+      .then((list) => {
+        if (alive) setProviders(list);
+      })
+      .catch(() => {
+        if (alive) {
+          setProviders([
+            { id: 'demo', name: 'Demo wallet', available: true, installed: true, note: 'no-extension-needed' },
+          ]);
+        }
+      });
     return () => {
       alive = false;
     };
@@ -64,17 +91,23 @@ export function WalletDemo({
     }
   };
 
+  const short = connected ? `${connected.address.slice(0, 6)}…${connected.address.slice(-4)}` : null;
+
   return (
     <Card>
-      <CardHeader title={labels.title} />
+      <CardHeader
+        title={labels.title}
+        action={
+          <Badge tone={connected ? 'up' : 'neutral'} aria-live="polite">
+            {connected ? labels.statusOn : labels.statusOff}
+            {short ? <span className="num"> · {short}</span> : null}
+          </Badge>
+        }
+      />
       <p className="mt-3 text-[12.5px] leading-relaxed text-text2">{labels.note}</p>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <Button
-          size="sm"
-          {...(connected ? { onClick: () => void wallet.disconnect() } : {})}
-          disabled={!connected}
-        >
+        <Button size="sm" {...(connected ? { onClick: () => void wallet.disconnect() } : {})} disabled={!connected}>
           {labels.disconnect}
         </Button>
         <Button size="sm" variant="outline" {...{ onClick: () => connect('metamask') }}>
@@ -118,7 +151,23 @@ export function WalletDemo({
         </Button>
       </div>
 
-      <div className="mt-5 rounded-card border border-hair bg-field p-4">
+      {/* Proof that the topbar and this block are the same wallet, not a screenshot of one. */}
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-[12px] border border-hair bg-surface px-3 py-2">
+        <p className="min-w-0 text-[11.5px] leading-relaxed text-text2">
+          {connected ? (
+            <>
+              {labels.addressLabel}: <span className="num font-bold text-text">{short}</span>
+            </>
+          ) : (
+            labels.statusOff
+          )}
+        </p>
+        <Button size="sm" variant="link" {...{ onClick: () => requestWalletModal() }}>
+          {labels.openModal}
+        </Button>
+      </div>
+
+      <div className="mt-4 rounded-card border border-hair bg-field p-4">
         <WalletModalView
           providers={providers}
           wallet={connected}
@@ -127,6 +176,9 @@ export function WalletDemo({
           copied={copied}
           balances={balances}
           strings={strings}
+          liveNote={
+            connected ? `${connected.isDemo ? status.demo : status.real} · ${short}` : status.none
+          }
           errors={errors}
           onConnect={connect}
           onDisconnect={() => void wallet.disconnect()}

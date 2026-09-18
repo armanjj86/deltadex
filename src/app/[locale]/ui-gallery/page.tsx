@@ -73,9 +73,10 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
     },
     {
       kind: f('kind_duration'),
-      // units come from the dictionary (the only place strings live), digits stay Latin
-      en: fmt.formatDuration(548, f.raw('kind_duration_units') as DurationUnits),
-      fa: fmt.formatDuration(548, { year: 'y', months: 'mo', days: 'd', and: ' ' }),
+      // Each column uses its OWN unit vocabulary, both from the dictionary (strings never live in TS).
+      // English keeps the compact form `1y 6mo`; Persian spells the words out — digits stay Latin.
+      en: fmt.formatDuration(548, { year: 'y', months: 'mo', days: 'd', and: ' ' }),
+      fa: fmt.formatDuration(548, f.raw('kind_duration_units') as DurationUnits),
     },
     {
       kind: f('kind_address'),
@@ -237,6 +238,15 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
             errorA: t('walletErrA'),
             errorB: t('walletErrB'),
             copyState: t('walletCopy'),
+            statusOff: t('walletStatusOff'),
+            statusOn: t('walletStatusOn'),
+            addressLabel: t('walletAddressLabel'),
+            openModal: t('walletOpenModal'),
+          }}
+          status={{
+            none: w('statusNone'),
+            demo: w('statusConnectedDemo'),
+            real: w('statusConnectedReal'),
           }}
         />
       </Section>
