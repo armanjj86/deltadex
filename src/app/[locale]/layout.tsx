@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
-import { dirOf, isLocale, type Locale, locales } from '@/i18n/config';
+import { dirOf, isLocale, type Locale, locales } from '@/i18n/routing';
 import { Deco } from '@/components/layout/Deco';
 import { Chrome } from '@/components/layout/Chrome';
 import { fontVars } from '@/lib/fonts';

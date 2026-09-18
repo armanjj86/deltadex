@@ -4,9 +4,9 @@
     "tagline": "Trade like it's yours."
   },
   "phase": {
-    "title": "Phase 0 — scaffold",
-    "intro": "This is the skeleton of the prototype: no pages are designed yet. The screen exists to prove that the build, the fonts, the Aurora tokens and the locale routing all work.",
-    "nextUp": "Next: Phase 1 — the Aurora component library (Button, Glass card, Topnav, Modal, Table …)."
+    "title": "Phase 2 — language layer & formats",
+    "intro": "The scaffold, the Aurora component library and the locale pipeline are in place: the middleware resolves the language from the URL prefix or the NEXT_LOCALE cookie, the dictionary covers every visible string, and numbers/dates come from one formatting layer (Persian digits and the Jalali calendar in Farsi).",
+    "nextUp": "Next: Phase 3 — mock data (tokens, pools, proposals), zustand stores and the wallet connection (MetaMask or the demo chain)."
   },
   "tokens": {
     "heading": "Aurora tokens",
@@ -59,7 +59,9 @@
     "portfolio": "Portfolio",
     "docs": "Docs",
     "connect": "Connect Wallet",
-    "comingSoon": "Available from Phase 3 (wallet + settings)"
+    "comingSoon": "Available from Phase 3 (wallet + settings)",
+    "switchTo": "Farsi",
+    "switchHint": "Switch the interface language (layout mirrors to RTL)."
   },
   "footer": {
     "copy": "© 2026 Delta Labs — built by the community",
@@ -160,5 +162,27 @@
     "heroGrad": "yours",
     "fontWeightsLabel": "Weights:",
     "heroTrailing": "."
+  },
+  "format": {
+    "heading": "Format & locale",
+    "intro": "One value, both locales. English is rendered with Latin digits; Farsi uses Persian digits, Persian thousands separators and the Jalali (Shomalī) calendar. Prices, addresses and hashes always stay Latin — that is a contract, not a leftover.",
+    "colValue": "Kind",
+    "colEn": "en",
+    "colFa": "fa",
+    "note": "The middleware resolved this page from the locale prefix / NEXT_LOCALE cookie. Numbers and dates follow the locale; prices and addresses stay Latin.",
+    "kind_counts": "Count",
+    "kind_token": "Token amount",
+    "kind_usd": "USD price",
+    "kind_compact": "Compact USD",
+    "kind_pct": "24h change",
+    "kind_date": "Date",
+    "kind_datetime": "History row",
+    "kind_duration": "Lock duration",
+    "kind_address": "Wallet address",
+    "today": "Today",
+    "clock": "Clock",
+    "swaps": "Swaps this week",
+    "price": "DELTA price",
+    "pageHeading": "Localisation (Phase 2)"
   }
 }

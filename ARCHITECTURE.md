@@ -31,7 +31,7 @@ no deployments, no mobile layout (desktop, 1440px target). Wallet *connection* i
 | UI | React | `19.2.8` | exact pin, avoids peer drift |
 | Language | TypeScript | `5.9.3` | `strict: true` |
 | Styling | Tailwind CSS | `3.4.19` | CSS-first v4 rejected: config-file mapping of the Aurora tokens is clearer and better documented |
-| i18n | next-intl | `4.14.4` | `src/i18n/request.ts`; middleware arrives in Phase 2 |
+| i18n | next-intl | `4.14.4` | `src/i18n/routing.ts` (locales + middleware), `src/i18n/request.ts` (dictionaries + error policy) |
 | State | zustand | `^5.0.15` | per-feature stores + `persist` middleware |
 | Fonts | `next/font/local` + static `@font-face` | — | files committed in `public/fonts/` (never a CDN) |
 
@@ -54,7 +54,7 @@ must be green.
 src/
 ├── app/
 │   ├── layout.tsx                 pass-through (imports globals.css)
-│   ├── page.tsx                   "/" → /en   (temporary until Phase 2 middleware)
+│   ├── page.tsx                   "/" — middleware resolves the locale first (Phase 2)
 │   ├── icon.svg
 │   └── [locale]/
 │       ├── layout.tsx             <html lang dir> + font vars + <Deco/> + NextIntlClientProvider
@@ -72,7 +72,7 @@ src/
 ├── data/            typed mock data (tokens, pools, farms, proposals, charts) — §5
 ├── store/           zustand stores, localStorage-persisted — §6
 ├── i18n/            config.ts · request.ts · dictionaries/{en,fa}.json — §7
-├── lib/             hex.ts (mock hashes/addresses); format.ts (numbers/dates, Phase 2); csv.ts (Phase 11)
+├── lib/             hex.ts (mock hashes/addresses); format.ts (THE number/date layer, Phase 2); csv.ts (Phase 11)
 └── styles/          globals.css · tokens.css · fonts.css · vazirmatn.css · ray.css · deco.css
 ```
 
@@ -214,7 +214,8 @@ store read fails, the UI falls back to the seed data silently.
 ## 7 · i18n & RTL rules
 
 - Locales `['en','fa']`, default **`en`**; routes carry the locale (`/en/swap`, `/fa/swap`).
-  `src/i18n/config.ts` is the source for both; Phase 2 adds `src/i18n/routing.ts` + middleware.
+  `src/i18n/routing.ts` is the source for both (it also exports `routing` for the middleware and
+  `swapLocalePath()` used by the locale switcher). `src/i18n/config.ts` was removed in Phase 2.
 - **No hardcoded user-facing strings in components** — every string comes from
   `src/i18n/dictionaries/{en,fa}.json`. Keys are namespaced per page/feature (`swap.review.title`).
 - Farsi wording must follow `docs/design/glossary.md` (locked translations). New terms: propose in
@@ -235,8 +236,22 @@ store read fails, the UI falls back to the seed data silently.
   pins the row to the far end of its column (the exact bug found in the Phase 0 handover).
   **Overflow rule:** `.num` never wraps, so any full address/hash rendered inside a padded card must
   carry `.num-wrap` as well (Phase 1 QA: the gallery address specimen stuck out of the card).
-- Dates: Gregorian for `en`; Jalali (Shomalī, `fa-IR-u-ca-persian`) for `fa`, via
+- Dates: Gregorian for `en`; Jalali (Shomalī, `fa-IR-u-ca-persian-nu-arabext`) for `fa`, via
   `src/lib/format.ts` helpers (Phase 2). Deadlines show relative time + absolute date.
+- **Formatting is only done through `src/lib/format.ts`** — feature pages must not call `Intl.*` or
+  `toLocaleString` themselves, or the two locales drift apart per screen. The contract:
+  | helper | `en` | `fa` | rule |
+  |---|---|---|---|
+  | `formatNum` / `formatTokenAmount` | `41,209` | `۴۱٬۲۰۹` | Persian digits + `٬` separator |
+  | `formatUsd` / `formatCompactUsd` | `$0.4218` / `$128.4M` | identical | **never localized** (`.num`) |
+  | `formatPct` | `+12.4%` / `−1.1%` | identical | real minus sign `−`, Latin digits |
+  | `formatDate` / `formatShortDate` | `Fri, 18 Sep 2026` | `جمعه ۱۴۰۵/۰۶/۲۷` | numeric slash form in `fa` |
+  | `formatDateLong` | `18 September 2026` | `۲۷ شهریور ۱۴۰۵` | month names, for proposal deadlines |
+  | `formatTime` / `formatDateTime` | `14:05` / `18 Sep 2026, 14:05` | `۱۴:۰۵` / `۱۴۰۵/۰۶/۲۷، ۱۴:۰۵` | browser clock |
+  | `formatDuration` | `1y 6mo` | identical | veDELTA lock chips |
+  | `toFaDigits(s, {separators})` | — | — | escape hatch for strings built elsewhere |
+  `<LocaleText locale value latin separators>` wraps a formatted string (client-safe), `<NowLine>`
+  renders today/clock from the **browser** clock so prerendered builds never show the CI date.
 - `lang`/`dir` correctness beats cleverness: a page that renders LTR inside `dir="rtl"` is a bug.
 
 ---
@@ -267,7 +282,8 @@ store read fails, the UI falls back to the seed data silently.
 - **Dictionary strings are ICU-parsed**: a literal `{` or `}` (file paths like
   `src/components/{ui,widgets}`, or JSX-ish snippets) must be written as `'{'` / `'}`` or the render
   throws `INVALID_ARGUMENT_TYPE`. Curly braces never appear in user-facing Persian copy, so this only
-  bites developer-facing notes — keep them out of the dictionaries if you can.
+  bites developer-facing notes — keep them out of the dictionaries if you can. (Hit twice: once in
+  Phase 1 for `src/components/{ui,widgets}`, once in Phase 2 for `resolves /{locale}`.)
 - **No strings inside components.** Topnav / Footer / Modal / DemoRows take `labels` objects built from
   next-intl by the caller; a presentational component never reads a dictionary itself.
 - **Farsi mode must read as Farsi.** Anything a user can see goes through the dictionary; the only
@@ -321,8 +337,8 @@ store read fails, the UI falls back to the seed data silently.
 | Phase | Scope | Status |
 |---|---|---|
 | 0 | Scaffold, tokens/fonts, `ARCHITECTURE.md`, locale routes | ✅ merged to `main` (PR #1) |
-| 1 | Aurora component library + Topnav/Footer + SVG brand | ✅ built — in review (PR #2) |
-| 2 | next-intl middleware, dictionaries, RTL/format helpers, locale switcher | next |
+| 1 | Aurora component library + Topnav/Footer + SVG brand | ✅ merged to `main` (PR #2, + QA rounds) |
+| 2 | next-intl middleware, dictionaries, RTL/format helpers, locale switcher | ✅ built — in review (PR #4) |
 | 3 | Mock data + stores + wallet (MetaMask/demo) + MockTransactionService wiring | planned |
 | 4 | Landing `/` (frame 01) | planned |
 | 5 | Swap (ch02, UC-05…10) | planned |

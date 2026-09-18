@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { ArrowUpRight, BadgeCheck, Lock, Zap } from 'lucide-react';
-import type { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/routing';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Chip } from '@/components/ui/Chip';
@@ -10,12 +10,15 @@ import { Card, WidgetCard, CardHeader, PageHeader } from '@/components/ui/Card';
 import { InputField } from '@/components/ui/Field';
 import { TokenIcon, TokenIconPair } from '@/components/ui/TokenIcon';
 import { Tooltip } from '@/components/ui/Tooltip';
+import { NowLine } from '@/components/ui/NowLine';
+import { TableGrid, TCell } from '@/components/ui/Table';
 import { BrandLockup, BrandMark, HeroTitle, TokenGlyphRow, GasPill } from '@/components/brand/Brand';
 import { StatStrip } from '@/components/widgets/StatStrip';
 import { ProToolsBar } from '@/components/widgets/ProToolsBar';
 import { SwapDemo, LockModalDemo } from '@/components/common/PhaseOneDemos';
 import { DemoRows } from '@/components/common/DemoRows';
-import { DEMO_STORY, compactUsd } from '@/data/demo-story';
+import { DEMO_STORY, compactUsd, shortAddress } from '@/data/demo-story';
+import * as fmt from '@/lib/format';
 
 /**
  * /en/ui-gallery + /fa/ui-gallery — Phase 1 acceptance surface (temporary, removed in Phase 12 QA).
@@ -25,6 +28,7 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'gallery' });
   const demo = await getTranslations({ locale, namespace: 'demo' });
+  const f = await getTranslations({ locale, namespace: 'format' });
 
   const Section = ({ title, children }: { title: string; children: ReactNode }) => (
     <section className="mt-10">
@@ -32,6 +36,43 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
       <div className="mt-4">{children}</div>
     </section>
   );
+
+
+  /* One value rendered through both locales so the formatter contract is visible on one screen.
+     `now` is never read on the server for user-facing values: prerendered HTML would carry the
+     build machine's clock, so "today"/"now" rows render through <NowLine/> (browser clock). */
+  const DEMO_TIMESTAMP = new Date('2026-09-18T14:05:00');
+  const formatRows: { kind: string; en: ReactNode; fa: ReactNode }[] = [
+    { kind: f('kind_counts'), en: fmt.formatNum(41209, 'en'), fa: fmt.formatNum(41209, 'fa') },
+    { kind: f('kind_token'), en: fmt.formatTokenAmount(21700, 'en'), fa: fmt.formatTokenAmount(21700, 'fa') },
+    {
+      kind: f('kind_usd'),
+      en: fmt.formatUsd(DEMO_STORY.token.priceUsd, 4),
+      fa: fmt.formatUsd(DEMO_STORY.token.priceUsd, 4),
+    },
+    {
+      kind: f('kind_compact'),
+      en: fmt.formatCompactUsd(DEMO_STORY.tvlUsd),
+      fa: fmt.formatCompactUsd(DEMO_STORY.tvlUsd),
+    },
+    { kind: f('kind_pct'), en: fmt.formatPct(12.4), fa: fmt.formatPct(12.4) },
+    {
+      kind: f('kind_date'),
+      en: <NowLine locale="en" kind="dateNow" />,
+      fa: <NowLine locale="fa" kind="dateNow" />,
+    },
+    {
+      kind: f('kind_datetime'),
+      en: fmt.formatDateTime(DEMO_TIMESTAMP, 'en'),
+      fa: fmt.formatDateTime(DEMO_TIMESTAMP, 'fa'),
+    },
+    { kind: f('kind_duration'), en: fmt.formatDuration(548), fa: fmt.formatDuration(548) },
+    {
+      kind: f('kind_address'),
+      en: shortAddress(DEMO_STORY.wallet.address),
+      fa: shortAddress(DEMO_STORY.wallet.address),
+    },
+  ];
 
   return (
     <main className="relative z-10 mx-auto w-full max-w-[1180px] flex-1 px-8 pb-20 pt-10">
@@ -287,6 +328,33 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
               },
             ]}
           />
+        </Card>
+      </Section>
+
+      <Section title={f('heading')}>
+        <Card>
+          <p className="text-[13px] leading-relaxed text-text2">{f('intro')}</p>
+          <div className="dd-tbl-shell mt-5">
+            <TableGrid template="minmax(120px,1fr) 2fr 2fr" head>
+              <TCell muted>{f('colValue')}</TCell>
+              <TCell>{f('colEn')}</TCell>
+              <TCell>{f('colFa')}</TCell>
+            </TableGrid>
+            {formatRows.map((row) => (
+              <TableGrid key={row.kind} template="minmax(120px,1fr) 2fr 2fr">
+                <TCell muted className="text-[12.5px]">
+                  {row.kind}
+                </TCell>
+                <TCell numeric wrap strong>
+                  {row.en}
+                </TCell>
+                <TCell numeric wrap strong>
+                  {row.fa}
+                </TCell>
+              </TableGrid>
+            ))}
+          </div>
+          <p className="mt-4 text-[12px] leading-relaxed text-text3">{f('note')}</p>
         </Card>
       </Section>
 

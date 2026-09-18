@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
-import { isLocale, type Locale } from '@/i18n/config';
+import { isLocale, type Locale } from '@/i18n/routing';
 import { Topnav, type NavId } from './Topnav';
 import { Footer } from './Footer';
 
@@ -47,6 +47,8 @@ export function Chrome({ children }: { children: ReactNode }): ReactNode {
     docs: nav('docs'),
     connect: nav('connect'),
     comingSoon: nav('comingSoon'),
+    switchTo: nav('switchTo'),
+    switchHint: nav('switchHint'),
   };
 
   return (

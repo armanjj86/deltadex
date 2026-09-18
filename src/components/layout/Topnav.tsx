@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { Settings2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { DEMO_STORY, shortAddress } from '@/data/demo-story';
-import type { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/routing';
 import { BrandLockup, GasPill } from '@/components/brand/Brand';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { Button } from '@/components/ui/Button';
+import { LocaleSwitcher } from '@/components/layout/LocaleSwitcher';
 
 export type NavId = 'trade' | 'pools' | 'stake' | 'farm' | 'bridge' | 'governance' | 'portfolio';
 
@@ -27,6 +28,9 @@ export interface TopnavLabels {
   docs: string;
   connect: string;
   comingSoon: string;
+  /** Label of the EN|فارسی toggle (it names the language you switch *to*). */
+  switchTo: string;
+  switchHint: string;
 }
 
 export function Topnav({
@@ -86,6 +90,10 @@ export function Topnav({
 
       <div className="ms-auto flex items-center gap-3">
         {/* Phase 3 makes these real (network switch, settings popover, connected account / modal). */}
+        <LocaleSwitcher
+          locale={locale}
+          labels={{ en: 'English', fa: labels.switchTo, hint: labels.switchHint }}
+        />
         {wallet === 'connect' ? (
           <Button size="md">{t.connect}</Button>
         ) : (

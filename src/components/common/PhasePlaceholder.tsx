@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
-import type { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/routing';
 import type { ReactNode } from 'react';
 
 /**

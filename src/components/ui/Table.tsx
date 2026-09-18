@@ -57,6 +57,7 @@ export function TCell({
   children,
   align = 'start',
   numeric,
+  wrap,
   muted,
   strong,
   className,
@@ -65,6 +66,8 @@ export function TCell({
   align?: Align;
   /** mono + tabular + LTR-isolated (prices, APR, amounts) */
   numeric?: boolean;
+  /** let a long atomic value (full address, localized date) break onto a second line */
+  wrap?: boolean;
   muted?: boolean;
   strong?: boolean;
   className?: string;
@@ -72,7 +75,8 @@ export function TCell({
   return (
     <div
       className={cn(
-        'tbl-cell min-w-0 truncate',
+        'tbl-cell min-w-0',
+        wrap ? 'whitespace-normal break-words' : 'truncate',
         ALIGN_CLASS[align],
         strong && 'font-bold',
         muted && 'text-text2',
@@ -81,7 +85,7 @@ export function TCell({
     >
       {/* `numeric` isolates only the value, never the cell: putting `direction: ltr` on the block
           itself made the value hug the opposite edge of its column in RTL (Phase 1 QA). */}
-      {numeric ? <span className="num">{children}</span> : children}
+      {numeric ? <span className={cn('num', wrap && 'num-wrap')}>{children}</span> : children}
     </div>
   );
 }

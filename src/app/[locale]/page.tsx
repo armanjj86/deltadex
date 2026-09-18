@@ -1,8 +1,12 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/routing';
 import { compactUsd, DEMO_STORY, shortAddress } from '@/data/demo-story';
+import * as fmt from '@/lib/format';
+import { LocaleText } from '@/components/ui/LocaleText';
+import { LocaleSwitcher } from '@/components/layout/LocaleSwitcher';
+import { NowLine } from '@/components/ui/NowLine';
 
 /**
  * Phase 0 verification surface.
@@ -20,13 +24,15 @@ export default async function ScaffoldPage({
   const t = await getTranslations();
   const g = await getTranslations({ locale, namespace: 'gallery' });
 
+  // Phase 2: count-like figures go through src/lib/format (Persian digits in `fa`); prices, the
+  // compact USD forms and the address stay Latin by contract.
   const stats = [
-    { label: t('demo.delta'), value: `$${DEMO_STORY.token.priceUsd}`, delta: `+${DEMO_STORY.token.change24hPct}%` },
+    { label: t('demo.delta'), value: `$${DEMO_STORY.token.priceUsd}`, delta: fmt.formatPct(DEMO_STORY.token.change24hPct) },
     { label: t('demo.tvl'), value: compactUsd(DEMO_STORY.tvlUsd) },
     { label: t('demo.volume'), value: compactUsd(DEMO_STORY.volume24hUsd) },
     { label: t('demo.gas'), value: `${DEMO_STORY.gasGwei} gwei` },
     { label: t('demo.wallet'), value: shortAddress(DEMO_STORY.wallet.address) },
-    { label: t('demo.locked'), value: DEMO_STORY.veDelta.locked.toLocaleString('en-US') },
+    { label: t('demo.locked'), value: fmt.formatNum(DEMO_STORY.veDelta.locked, locale) },
   ];
 
   /* num-line (not num): the row must keep mirroring in RTL, only the value itself
@@ -56,20 +62,15 @@ export default async function ScaffoldPage({
             {g('prototypeLabel')}
           </span>
         </div>
-        <nav className="flex items-center gap-2 text-[13px]">
-          <Link
-            href="/en"
-            className={`rounded-pill border px-3 py-[6px] ${locale === 'en' ? 'border-acc-bd bg-acc-dim text-acc' : 'border-hair bg-surface text-text2'}`}
-          >
-            EN
-          </Link>
-          <Link
-            href="/fa"
-            className={`rounded-pill border px-3 py-[6px] ${locale === 'fa' ? 'border-acc-bd bg-acc-dim text-acc' : 'border-hair bg-surface text-text2'}`}
-          >
-            فارسی
-          </Link>
-        </nav>
+        <LocaleSwitcher
+            locale={locale}
+            className="bg-transparent"
+            labels={{
+              en: 'English',
+              fa: t('nav.switchTo'),
+              hint: t('nav.switchHint'),
+            }}
+          />
       </header>
 
       <section className="mt-12">
@@ -177,6 +178,36 @@ export default async function ScaffoldPage({
             </p>
           </div>
         </div>
+      </section>
+
+      {/* Phase 2 proof: the same value formatted for both locales, plus the localized clock. */}
+      <section className="mt-6 rounded-card border border-hair bg-surface p-6 backdrop-blur-xl shadow-soft">
+        <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-text2">{t('format.pageHeading')}</p>
+        <div className="mt-4 grid grid-cols-4 gap-6">
+          <div>
+            <p className="text-[11px] text-text2">{t('format.today')}</p>
+            <p className="num-line mt-1 text-[15px] font-bold">
+              <NowLine locale={locale} kind="dateNow" />
+            </p>
+          </div>
+          <div>
+            <p className="text-[11px] text-text2">{t('format.clock')}</p>
+            <p className="num-line mt-1 text-[15px] font-bold">
+              <NowLine locale={locale} kind="time" />
+            </p>
+          </div>
+          <div>
+            <p className="text-[11px] text-text2">{t('format.swaps')}</p>
+            <p className="num-line mt-1 text-[15px] font-bold">{fmt.formatNum(41209, locale)}</p>
+          </div>
+          <div>
+            <p className="text-[11px] text-text2">{t('format.price')}</p>
+            <p className="num-line mt-1 text-[15px] font-bold">
+              <LocaleText locale={locale} latin value={fmt.formatUsd(DEMO_STORY.token.priceUsd, 4)} />
+            </p>
+          </div>
+        </div>
+        <p className="mt-4 text-[12px] leading-relaxed text-text3">{t('format.note')}</p>
       </section>
 
       <footer className="mt-8 flex items-center justify-between border-t border-hair pt-5 text-[12px] text-text2">

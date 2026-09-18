@@ -1,4 +1,4 @@
-import type { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/routing';
 import { PhasePlaceholder } from '@/components/common/PhasePlaceholder';
 
 /** Route /pools — real UI lands in a later phase (see ARCHITECTURE.md §7). */
