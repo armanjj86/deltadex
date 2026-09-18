@@ -249,7 +249,7 @@ store read fails, the UI falls back to the seed data silently.
   | `formatDate` / `formatShortDate` | `Fri, 18 Sep 2026` | `جمعه 1405/06/27` | numeric slash form in `fa` |
   | `formatDateLong` | `18 September 2026` | `27 شهریور 1405` | month names, for proposal deadlines |
   | `formatTime` / `formatDateTime` | `14:05` / `18 Sep 2026, 14:05` | `14:05` / `1405/06/27، 14:05` | browser clock |
-  | `formatDuration` | `1y 6mo` | identical | veDELTA lock chips |
+  | `formatDuration` | `1y 6mo` | `1 سال و 6 ماه` | digits Latin, **unit words from the dictionary** (never hard-coded in TS) |
   `<LocaleText locale value latin>` marks a formatted value (client-safe; `latin` applies `.num`), `<NowLine>`
   renders today/clock from the **browser** clock so prerendered builds never show the CI date.
 - `lang`/`dir` correctness beats cleverness: a page that renders LTR inside `dir="rtl"` is a bug.
@@ -286,12 +286,24 @@ store read fails, the UI falls back to the seed data silently.
   Phase 1 for `src/components/{ui,widgets}`, once in Phase 2 for `resolves /{locale}`.)
 - **No strings inside components.** Topnav / Footer / Modal / DemoRows take `labels` objects built from
   next-intl by the caller; a presentational component never reads a dictionary itself.
+- **Hero title = `lead` + gradient `gradWord` + `trailing`.** The tail (`.` in English, ` است.` in Farsi) is
+  rendered **outside** the gradient span, and the space before it is written as a non-breaking space in the
+  dictionary — JSX collapses a newline between `{...}` children, so a plain leading space in a message
+  silently disappears. Farsi gradient segment: «برای خودتان».
+- **Card text must fit the content box, not the card box.** The gallery/landing grids give a card ~365px
+  with `p-6` (≈317px content). A `.num` string is ~10.4px/char at 16px, so a specimen row is capped at
+  ~30 chars there — long samples (`0x… · 128.4M · $0.4218`) wrapped and left a `·` dangling at the line end
+  (Phase 2 QA). Rule: specimen/demo strings ≤ 30 chars at 16px mono, or 13px for a full 42-char address.
 - **Numbers are Latin.** In Farsi mode every digit — dates, counts, the year in the footer, the
   field placeholder — is a Western digit. Persian digits are not used anywhere in the UI; the only
   Farsi-specific formatting left is the Jalali calendar and the text direction.
 - **Every phase report ends with an explicit checklist table.** Each acceptance item is listed with
   where to look (`route` + section) and its state, so nothing can be dropped between the master
   prompt, `ARCHITECTURE.md` and the review message.
+- **Dictionary parity is checked by `npm run i18n:check`** (structural: same key paths in both JSONs,
+  no leaked-key-looking strings, no unescaped ICU braces). next-intl renders a missing key as the key
+  itself instead of throwing, so a typo like `t('faSample')` in the `gallery` namespace silently printed
+  `gallery.faSample` on the page — run the check after touching dictionaries or translation keys.
 - **Farsi mode must read as Farsi.** Anything a user can see goes through the dictionary; the only
   Latin that stays in a Persian page is intentional (brand DELTA DEX, token symbols, veDELTA, CSS
   variable names, font names in specimens). QA rule: paste the rendered text into a Latin-word count
@@ -344,7 +356,7 @@ store read fails, the UI falls back to the seed data silently.
 |---|---|---|
 | 0 | Scaffold, tokens/fonts, `ARCHITECTURE.md`, locale routes | ✅ merged to `main` (PR #1) |
 | 1 | Aurora component library + Topnav/Footer + SVG brand | ✅ merged to `main` (PR #2, + QA rounds) |
-| 2 | next-intl middleware, dictionaries, RTL/format helpers, locale switcher | ✅ built — in review (PR #4) |
+| 2 | next-intl middleware, dictionaries, RTL/format helpers, locale switcher | ✅ built — in review (PR #4, + QA round: Latin digits, duration units, slogan gradient, mono specimen width) |
 | 3 | Mock data + stores + wallet (MetaMask/demo) + MockTransactionService wiring | planned |
 | 4 | Landing `/` (frame 01) | planned |
 | 5 | Swap (ch02, UC-05…10) | planned |

@@ -43,7 +43,7 @@
 | Portfolio / Dashboard | پورتفولیو / داشبورد |
 | History | تاریخچه تراکنش‌ها |
 | Connect Wallet | اتصال کیف پول |
-| Landing hero: "Trade like it's yours." | «معامله کنید؛ انگار مال خودتان است.» |
+| Landing hero: "Trade like it's yours." | «معامله کنید؛ انگار **برای** خودتان است.» *(user revision, 2026-09-18 — supersedes «انگار مال خودتان است». Gradient word = «برای خودتان»)* |
 
 ## 3 · Wallet & connection (Ch.1)
 

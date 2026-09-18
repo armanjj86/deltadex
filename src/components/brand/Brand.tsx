@@ -66,13 +66,17 @@ export function HeroTitle({
 }: {
   lead: ReactNode;
   gradWord: ReactNode;
-  /** Punctuation glued to the gradient word; pass '' for languages that use «.»-free headlines. */
-  trailing?: string;
+  /** Tail rendered AFTER the gradient span (a «.» for Latin, « است.» for Persian). */
+  trailing?: ReactNode;
   className?: string;
 }): ReactNode {
   return (
     <h1 className={cn('text-[60px] font-extrabold leading-[1.05] tracking-[-0.028em]', className)}>
-      {lead} <span className="grad-word">{gradWord + trailing}</span>
+      {lead} <span className="grad-word">{gradWord}</span>
+      {/* The tail renders outside .grad-word (in RTL, a leading space inside the message would get
+          pulled into the gradient span). The space in front of it must be an nbsp **carried by the
+          message itself** (`fa: "\u00a0است."`) — a literal space between JSX children is collapsed. */}
+      {trailing ? <>{trailing}</> : null}
     </h1>
   );
 }

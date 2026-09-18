@@ -168,15 +168,24 @@ export function daysUntil(date: Date, now: Date = new Date()): number {
 }
 
 /**
- * "1y 6mo" / "8mo" / "12d" — the lock-duration vocabulary of the veDELTA UI. Digits stay Latin on
- * purpose: these strings live inside mono chips and `lang="en"` spans, next to `veDELTA` labels.
+ * Lock-duration vocabulary of the veDELTA UI. Digits are always Latin (Phase 2 QA decision); the
+ * unit labels come from the caller, so `fa` can render «1 سال و 6 ماه» without this layer ever
+ * hard-coding a Persian word (the dictionaries stay the single source of strings).
  */
-export function formatDuration(days: number): string {
+export function formatDuration(
+  days: number,
+  units: { year: string; months: string; days: string; and?: string } = {
+    year: 'y',
+    months: 'mo',
+    days: 'd',
+    and: ' ',
+  },
+): string {
+  const join = units.and ?? ' ';
   const years = Math.floor(days / 365);
   const months = Math.round((days % 365) / 30);
-  const parts: string[] = [];
-  if (years) parts.push(`${years}y`);
-  if (months) parts.push(`${months}mo`);
-  if (!parts.length) parts.push(`${Math.max(1, days)}d`);
-  return parts.join(' ');
+  if (years && months) return `${years}${units.year}${join}${months}${units.months}`;
+  if (years) return `${years}${units.year}`;
+  if (months) return `${months}${units.months}`;
+  return `${Math.max(1, days)}${units.days}`;
 }

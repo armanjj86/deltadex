@@ -45,9 +45,9 @@
     "latinLabel": "Latin (Space Grotesk)",
     "latinSample": "Sphinx of black quartz, judge my vow.",
     "monoLabel": "Numerals / mono (IBM Plex Mono)",
-    "monoSample": "0x7A3f...F9C2 · 128.4M · $0.4218",
+    "monoSample": "0x7A3f…F9C2 · 128.4M",
     "faLabel": "Persian face (Ray)",
-    "faSample": "معامله کنید؛ انگار مال خودتان است."
+    "faSample": "معامله کنید؛ انگار برای خودتان است."
   },
   "nav": {
     "trade": "Trade",
@@ -161,7 +161,8 @@
     "heroLead": "Trade like it’s",
     "heroGrad": "yours",
     "fontWeightsLabel": "Weights:",
-    "heroTrailing": "."
+    "heroTrailing": ".",
+    "durationNote": "Duration units come from the dictionary too — only the digits stay Latin."
   },
   "format": {
     "heading": "Format & locale",
@@ -183,6 +184,12 @@
     "clock": "Clock",
     "swaps": "Swaps this week",
     "price": "DELTA price",
-    "pageHeading": "Localisation (Phase 2)"
+    "pageHeading": "Localisation (Phase 2)",
+    "kind_duration_units": {
+      "year": "y",
+      "months": "mo",
+      "days": "d",
+      "and": " "
+    }
   }
 }

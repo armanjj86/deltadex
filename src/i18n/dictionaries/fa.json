@@ -1,7 +1,7 @@
 {
   "brand": {
     "name": "دلتا دکس",
-    "tagline": "«معامله کنید؛ انگار مال خودتان است.»"
+    "tagline": "«معامله کنید؛ انگار برای خودتان است.»"
   },
   "phase": {
     "title": "فاز 2 — لایه‌ی زبان و قالب‌ها",
@@ -43,11 +43,11 @@
   },
   "fonts": {
     "latinLabel": "لاتین (Space Grotesk)",
-    "latinSample": "Space Grotesk — Trade like it's yours.",
+    "latinSample": "Space Grotesk — Trade like yours.",
     "monoLabel": "اعداد / مونو (IBM Plex Mono)",
-    "monoSample": "0x7A3f...F9C2 · 128.4M · $0.4218",
+    "monoSample": "0x7A3f…F9C2 · 128.4M",
     "faLabel": "فونت فارسی (Ray)",
-    "faSample": "معامله کنید؛ انگار مال خودتان است."
+    "faSample": "معامله کنید؛ انگار برای خودتان است."
   },
   "nav": {
     "trade": "مبادله",
@@ -158,10 +158,11 @@
     "swapMeta": "توکن نقدینگی · در بازه · سطح کارمزد 0.3٪",
     "swapMeta2": "توکن نقدینگی · در بازه · سطح کارمزد 0.05٪",
     "prototypeLabel": "پروتوتایپ",
-    "heroLead": "معامله کنید؛ انگار مال",
-    "heroGrad": "خودتان است.",
+    "heroLead": "معامله کنید؛ انگار",
+    "heroGrad": "برای خودتان",
     "fontWeightsLabel": "وزن‌ها:",
-    "heroTrailing": ""
+    "heroTrailing": " است.",
+    "durationNote": "واحد مدت هم مثل همه‌ی متن‌ها از دیکشنری می‌آید؛ رقم‌ها لاتین می‌مانند."
   },
   "format": {
     "heading": "قالب‌بندی و زبان",
@@ -183,6 +184,12 @@
     "clock": "ساعت",
     "swaps": "مبادله‌های این هفته",
     "price": "قیمت DELTA",
-    "pageHeading": "زبان‌سازی (فاز 2)"
+    "pageHeading": "زبان‌سازی (فاز 2)",
+    "kind_duration_units": {
+      "year": " سال ",
+      "months": " ماه",
+      "days": " روز ",
+      "and": "و "
+    }
   }
 }

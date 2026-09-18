@@ -24,6 +24,8 @@ import * as fmt from '@/lib/format';
  * /en/ui-gallery + /fa/ui-gallery — Phase 1 acceptance surface (temporary, removed in Phase 12 QA).
  * Server components render the static parts; <InteractiveDemo/> holds the stateful ones.
  */
+type DurationUnits = { year: string; months: string; days: string; and?: string };
+
 export default async function UiGallery({ params }: { params: Promise<{ locale: Locale }> }): Promise<ReactNode> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'gallery' });
@@ -66,7 +68,12 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
       en: fmt.formatDateTime(DEMO_TIMESTAMP, 'en'),
       fa: fmt.formatDateTime(DEMO_TIMESTAMP, 'fa'),
     },
-    { kind: f('kind_duration'), en: fmt.formatDuration(548), fa: fmt.formatDuration(548) },
+    {
+      kind: f('kind_duration'),
+      // units come from the dictionary (the only place strings live), digits stay Latin
+      en: fmt.formatDuration(548, f.raw('kind_duration_units') as DurationUnits),
+      fa: fmt.formatDuration(548, { year: 'y', months: 'mo', days: 'd', and: ' ' }),
+    },
     {
       kind: f('kind_address'),
       en: shortAddress(DEMO_STORY.wallet.address),
@@ -131,7 +138,7 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
           <Card>
             <CardHeader title="IBM Plex Mono" action={<Badge tone="neutral">{t('fontMonoNote')}</Badge>} />
             <p className="num mt-3 text-[26px] font-extrabold tracking-[-0.02em]">$128.4M</p>
-            <p className="num num-wrap mt-1 text-[15px] font-bold" title="0x7A3f8C41bE9d2506aB1C7e5D0f83aA4129e5F9C2">
+            <p className="num num-wrap mt-1 text-[13px] font-bold" title="0x7A3f8C41bE9d2506aB1C7e5D0f83aA4129e5F9C2">
               0x7A3f8C41bE9d2506aB1C7e5D0f83aA4129e5F9C2
             </p>
             <p className="mt-4 space-y-1 text-[12px] text-text2">
@@ -147,7 +154,7 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
           <Card featured>
             <CardHeader title="Ray · --font-fa" action={<Badge tone="up">Vazirmatn fallback</Badge>} />
             <p className="mt-3 text-[20px] font-extrabold leading-loose tracking-[0]" style={{ fontFamily: 'var(--font-fa)' }}>
-              معامله کنید؛ انگار مال خودتان است.
+              {t('fonts:faSample')}
             </p>
             <p className="mt-1 text-[13.5px] leading-loose text-text2" style={{ fontFamily: 'var(--font-fa)' }}>
               استخر نقدینگی · تعهدسپاری · مزرعه‌های کشت سود · پل بین‌زنجیره‌ای · حاکمیت · پورتفولیو
@@ -158,6 +165,33 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
             </p>
           </Card>
         </div>
+      </Section>
+
+      <Section title={f('heading')}>
+        <Card>
+          <p className="text-[13px] leading-relaxed text-text2">{f('intro')}</p>
+          <div className="dd-tbl-shell mt-5">
+            <TableGrid template="minmax(120px,1fr) 2fr 2fr" head>
+              <TCell muted>{f('colValue')}</TCell>
+              <TCell>{f('colEn')}</TCell>
+              <TCell>{f('colFa')}</TCell>
+            </TableGrid>
+            {formatRows.map((row) => (
+              <TableGrid key={row.kind} template="minmax(120px,1fr) 2fr 2fr">
+                <TCell muted className="text-[12.5px]">
+                  {row.kind}
+                </TCell>
+                <TCell numeric wrap strong>
+                  {row.en}
+                </TCell>
+                <TCell numeric wrap strong>
+                  {row.fa}
+                </TCell>
+              </TableGrid>
+            ))}
+          </div>
+          <p className="mt-4 text-[12px] leading-relaxed text-text3">{f('note')}</p>
+        </Card>
       </Section>
 
       <Section title={t('components')}>
@@ -328,33 +362,6 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
               },
             ]}
           />
-        </Card>
-      </Section>
-
-      <Section title={f('heading')}>
-        <Card>
-          <p className="text-[13px] leading-relaxed text-text2">{f('intro')}</p>
-          <div className="dd-tbl-shell mt-5">
-            <TableGrid template="minmax(120px,1fr) 2fr 2fr" head>
-              <TCell muted>{f('colValue')}</TCell>
-              <TCell>{f('colEn')}</TCell>
-              <TCell>{f('colFa')}</TCell>
-            </TableGrid>
-            {formatRows.map((row) => (
-              <TableGrid key={row.kind} template="minmax(120px,1fr) 2fr 2fr">
-                <TCell muted className="text-[12.5px]">
-                  {row.kind}
-                </TCell>
-                <TCell numeric wrap strong>
-                  {row.en}
-                </TCell>
-                <TCell numeric wrap strong>
-                  {row.fa}
-                </TCell>
-              </TableGrid>
-            ))}
-          </div>
-          <p className="mt-4 text-[12px] leading-relaxed text-text3">{f('note')}</p>
         </Card>
       </Section>
 
