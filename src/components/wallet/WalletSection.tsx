@@ -24,7 +24,7 @@ import type { WalletProviderId, WalletProviderInfo } from '@/services/wallet/typ
  * Demo-safety rules applied: a missing extension is a message, never a broken screen; a rejected
  * request closes nothing but the flow; the state survives a refresh (`dd.v1.wallet`).
  */
-export function WalletSection({ mode }: { mode: 'chip' | 'connect' }): React.ReactNode {
+export function WalletSection({ mode = 'chip' }: { mode?: 'chip' | 'connect' } = {}): React.ReactNode {
   const t = useTranslations('wallet');
   const nav = useTranslations('nav');
   const connected = useWallet();
@@ -137,8 +137,14 @@ export function WalletSection({ mode }: { mode: 'chip' | 'connect' }): React.Rea
     (token) => ({ symbol: token.symbol, amount: amounts[token.symbol] ?? token.seedBalance }),
   );
 
+  /*
+   * `mode` only chooses the shape of the **disconnected** slot: the landing (frame 01) shows a
+   * prominent Connect button, app pages (frame 02) a compact one. Once a wallet *is* connected the
+   * chip renders on every route, landing included — QA caught the landing keeping the button after a
+   * successful connect, which is exactly what made the wallet look "display only".
+   */
   const trigger =
-    mode === 'connect' || !connected ? (
+    !connected ? (
       <Button size="md" {...{ onClick: () => setOpen(true) }}>
         {nav('connect')}
       </Button>

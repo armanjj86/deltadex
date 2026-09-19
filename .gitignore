@@ -21,3 +21,6 @@ yarn-error.log*
 # local editor/tooling
 /.vscode/
 /.idea/
+
+# local test harness (esbuild output only; the .cjs/.mjs sources are kept in git)
+/.harness/bundle/

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
@@ -12,10 +13,15 @@ const EXIT_MS = 150;
  * faint mint halo (see .aurora-modal in ui.css). Escape + backdrop click close it; focus is moved
  * into the panel and trapped with Tab so the wallet flow stays keyboard-usable.
  *
- * Two rules learned in Phase 1 QA:
+ * Three rules learned the hard way (Phase 1 + Phase 3 QA):
  *  - it fades/pops in and out (CSS keyframes, no animation lib);
  *  - while open it sets `html.dd-lock-scroll` (overflow: clip) instead of `body { overflow: hidden }`,
- *    because hiding the scrollbar moved the whole page under the sticky topnav.
+ *    because hiding the scrollbar moved the whole page under the sticky topnav;
+ *  - **it renders through a portal into `<body>`.** The wallet modal is mounted inside the sticky
+ *    topnav (`z-50` + `backdrop-filter` = its own stacking context), and any `fixed` element inside
+ *    that context is painted *within the header's* stacking order — `z-[80]` did not help, so the
+ *    panel was covered by the page below and looked "empty / cut off" (Phase 3 QA report). Portaling
+ *    escapes the context; SSR-safe because `mounted` is false during the server pass.
  */
 export function Modal({
   open,
@@ -43,6 +49,9 @@ export function Modal({
   className?: string;
 }): ReactNode {
   const panelRef = useRef<HTMLDivElement | null>(null);
+  /** Only after mount: `document` does not exist during prerender. */
+  const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
+  useEffect(() => setPortalHost(document.body), []);
   const restoreRef = useRef<Element | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const titleId = labelledById ?? 'aurora-modal-title';
@@ -115,9 +124,9 @@ export function Modal({
     };
   }, [mounted, onKeyDown]);
 
-  if (!mounted) return null;
+  if (!mounted || !portalHost) return null;
 
-  return (
+  return createPortal(
     <div
       data-state={closing ? 'closing' : 'open'}
       className="dd-overlay fixed inset-0 z-[80] flex items-center justify-center p-6"
@@ -157,6 +166,7 @@ export function Modal({
         <div className="mt-5">{children}</div>
         {footer ? <div className="mt-5 border-t border-hair pt-4">{footer}</div> : null}
       </div>
-    </div>
+    </div>,
+    portalHost,
   );
 }

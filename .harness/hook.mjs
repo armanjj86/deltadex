@@ -1,0 +1,17 @@
+import { JSDOM } from 'jsdom';
+import React, { act } from 'react';
+const dom = new JSDOM('<!doctype html><html><body><div id="r"></div></body></html>', { url: 'http://localhost/' });
+const bind=(k,v)=>Object.defineProperty(globalThis,k,{value:v,configurable:true,writable:true});
+for (const k of ['window','document','HTMLElement','Element','Node','Event','CustomEvent','MouseEvent','localStorage']) bind(k, k==='localStorage'?dom.window.localStorage:dom.window[k]);
+bind('navigator', dom.window.navigator);
+globalThis.requestAnimationFrame=(cb)=>setTimeout(()=>cb(0),0); globalThis.IS_REACT_ACT_ENVIRONMENT=true;
+const { mountProbe, wallet } = await import('./bundle/entry.mjs');
+const d = dom.window.document;
+const show = (l) => console.log(`${l}: ${d.getElementById('hook-value')?.textContent} | service: ${wallet.getSnapshot() ? 'wallet' : 'null'}`);
+await act(async () => mountProbe(d.getElementById('r')));
+show('after mount');
+await act(async () => { d.getElementById('hook-connect').dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true })); await new Promise(r=>setTimeout(r,60)); });
+show('after connect click');
+await act(async () => { d.getElementById('hook-disconnect').dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true })); await new Promise(r=>setTimeout(r,60)); });
+show('after disconnect click');
+process.exit(0);

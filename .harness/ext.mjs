@@ -1,0 +1,20 @@
+import { JSDOM } from 'jsdom';
+import React, { act } from 'react';
+import { mountExternalConnect, resetWallet } from './bundle/entry.mjs';
+const dom = new JSDOM('<!doctype html><html><body><div id="r"></div></body></html>', { url: 'http://localhost/' });
+const d = dom.window.document;
+const bind = (k, v) => Object.defineProperty(globalThis, k, { value: v, configurable: true, writable: true });
+for (const k of ['window','document','HTMLElement','Element','Node','Event','CustomEvent','MouseEvent','localStorage']) bind(k, k==='localStorage'?dom.window.localStorage:dom.window[k]);
+bind('navigator', dom.window.navigator);
+globalThis.requestAnimationFrame=(cb)=>setTimeout(()=>cb(0),0); globalThis.IS_REACT_ACT_ENVIRONMENT=true;
+const flush = async (ms=80) => { await act(async () => { await new Promise(r=>setTimeout(r,ms)); }); };
+(async () => {
+  await act(async () => { await resetWallet(); });
+  await act(async () => { mountExternalConnect(d.getElementById('r')); });
+  await flush();
+  console.log('mounted:', d.getElementById('v').textContent);
+  await act(async () => { d.getElementById('ext').dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true })); });
+  await flush(300);
+  console.log('after external connect:', d.getElementById('v').textContent);
+  process.exit(0);
+})();

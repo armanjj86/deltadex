@@ -57,7 +57,15 @@ async function networkOf(chainIdHex: string): Promise<ConnectedWallet['network']
 
 export class MockWalletService implements WalletService {
   private current: ConnectedWallet | null | 'unread' = 'unread';
+  /** Classic subscribers (get the wallet as an argument). */
   private listeners = new Set<(wallet: ConnectedWallet | null) => void>();
+  /**
+   * `useSyncExternalStore` subscribers. They must be notified **on every** change: React ignores
+   * the argument and re-reads `getSnapshot()`, and it has no other way to notice a change made
+   * outside a render (a click that connects a wallet). Omitting them left the topbar stuck on
+   * "Connect Wallet" until the next focus/visibility event — found by the jsdom harness in QA.
+   */
+  private reactListeners = new Set<() => void>();
 
   /* ---- store binding: the service owns the connection, React only mirrors it ---- */
 
@@ -71,16 +79,15 @@ export class MockWalletService implements WalletService {
   /** The React listener is registered in `listeners` so provider events reach it; React then
       re-reads `getSnapshot()` (arguments are ignored by `useSyncExternalStore`). */
   subscribe = (listener: () => void): (() => void) => {
-    const noop = listener;
-    this.listeners.add(noop);
+    this.reactListeners.add(listener);
     this.providerOff ??= subscribeToProvider(async () => {
       // Refresh the account/chain from the extension, then notify: getSnapshot() must never be stale.
       await this.account(/* recheck */ true);
       this.emit();
     }, ['accountsChanged', 'chainChanged']);
     return () => {
-      this.listeners.delete(noop);
-      if (this.listeners.size === 0) {
+      this.reactListeners.delete(listener);
+      if (this.reactListeners.size === 0 && this.listeners.size === 0) {
         this.providerOff?.();
         this.providerOff = null;
       }
@@ -208,8 +215,11 @@ export class MockWalletService implements WalletService {
     return result.reason === 'rejected' ? 'rejected' : 'unavailable';
   }
 
+  /** Non-React consumers (a future toast system, the tx service, …). */
   onChange(listener: (wallet: ConnectedWallet | null) => void): () => void {
     this.listeners.add(listener);
+    // A subscriber that appears mid-session must learn the current state immediately.
+    listener(this.current === 'unread' ? null : (this.current as ConnectedWallet | null));
     return () => {
       this.listeners.delete(listener);
     };
@@ -224,6 +234,7 @@ export class MockWalletService implements WalletService {
   private emit(): void {
     const snapshot = this.current === 'unread' ? null : (this.current as ConnectedWallet | null);
     for (const listener of this.listeners) listener(snapshot);
+    for (const listener of this.reactListeners) listener();
   }
 }
 

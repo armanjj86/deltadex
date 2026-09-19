@@ -105,6 +105,20 @@ body {
 }
 
 /**
+ * `.num-phrase` — a *phrase* that contains Latin digits inside Persian prose
+ * («1 سال و 6 ماه», a Jalali date, "gas: 14 gwei"). It takes the number font but NOT a
+ * direction: `.num`'s `direction: ltr` is for atomic tokens (a price, an address) and re-orders
+ * words inside a multi-word phrase — the exact «به هم ریخته» report of Phase 3 QA. With no
+ * direction of its own, the phrase flows with its paragraph (RTL in Farsi, LTR in English) while
+ * every digit group stays a European number inside that run, which is the correct Persian order.
+ */
+.num-phrase {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/**
  * `.num-wrap` — modifier for a long atomic token (full 0x… address, tx hash) that must
  * stay LTR/monospace but is allowed to break onto a second line instead of overflowing
  * its card. Combine with `.num`; keep `.num` alone for values that must never break.

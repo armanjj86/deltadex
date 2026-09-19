@@ -57,23 +57,33 @@ export function TCell({
   children,
   align = 'start',
   numeric,
+  phrase,
   wrap,
   muted,
   strong,
   className,
+  dir,
 }: {
   children?: ReactNode;
   align?: Align;
   /** mono + tabular + LTR-isolated (prices, APR, amounts) */
   numeric?: boolean;
+  /** mono + tabular, but the *phrase* follows the paragraph direction (fa «1 سال و 6 ماه», jalali dates) */
+  phrase?: boolean;
   /** let a long atomic value (full address, localized date) break onto a second line */
   wrap?: boolean;
   muted?: boolean;
   strong?: boolean;
   className?: string;
+  /**
+   * Explicit base direction for the cell. Used by the locale comparison table (its EN column is LTR
+   * even on a Persian page); leave it unset everywhere else so RTL mirrors for free.
+   */
+  dir?: 'ltr' | 'rtl';
 }): ReactNode {
   return (
     <div
+      dir={dir}
       className={cn(
         'tbl-cell min-w-0',
         wrap ? 'whitespace-normal break-words' : 'truncate',
@@ -85,7 +95,11 @@ export function TCell({
     >
       {/* `numeric` isolates only the value, never the cell: putting `direction: ltr` on the block
           itself made the value hug the opposite edge of its column in RTL (Phase 1 QA). */}
-      {numeric ? <span className={cn('num', wrap && 'num-wrap')}>{children}</span> : children}
+      {numeric || phrase ? (
+        <span className={cn(phrase ? 'num-phrase' : 'num', wrap && 'num-wrap')}>{children}</span>
+      ) : (
+        children
+      )}
     </div>
   );
 }

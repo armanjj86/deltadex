@@ -251,6 +251,17 @@ window.ethereum  ←  touched ONLY by src/services/wallet/injected.ts
 - Delta Chain params are exactly as locked in §4: `97477` / `0x17cc5` (single source:
   `DELTA_CHAIN_ID_DECIMAL`), native `DELTA`, RPC
   `https://rpc.delta.exchange` (never contacted — MetaMask's "cannot verify" warning is expected).
+- `Modal` renders through **`createPortal(document.body)`**. A `fixed` overlay inside the sticky
+  topnav (`z-50` + `backdrop-filter`) is trapped in that stacking context — the panel was painted
+  *under* the page and the user reported it as an "empty window" (Phase 3 QA). Never mount overlays
+  inside the header/footer; the portal makes the primitive safe by construction.
+- `.num` is for **atomic** tokens only (price, address, hash: `direction: ltr` + isolate). A phrase
+  that mixes Persian words with Latin digits («1 سال و 6 ماه», a Jalali date) must use `.num-phrase`
+  (`TCell phrase`) so it flows with the paragraph; forcing ltr on it reverses the word order.
+- `useWallet()` = `useSyncExternalStore` **plus** an `onChange` bump: a change made inside an awaited
+  promise must re-render the topbar in the same tick, whatever the renderer's external-store heuristics.
+- `WalletSection`'s `mode` only styles the **disconnected** slot; when connected, every route shows the
+  chip (landing included).
 - `WalletModalView` takes a **plain `errors` record**, never a callback: functions cannot cross the RSC
   boundary (§8) — hit again in Phase 3 by `errorCopy={(key) => …}`.
 

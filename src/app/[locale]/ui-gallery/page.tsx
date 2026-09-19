@@ -185,10 +185,13 @@ export default async function UiGallery({ params }: { params: Promise<{ locale: 
                 <TCell muted className="text-[12.5px]">
                   {row.kind}
                 </TCell>
-                <TCell numeric wrap strong>
+                {/* `phrase`, not `numeric`: these samples are multi-word strings (a Jalali date,
+                    «1 سال و 6 ماه»). `.num`'s forced `direction: ltr` is for atomic tokens only —
+                    applied to a Persian phrase it re-orders the words (Phase 3 QA report). */}
+                <TCell phrase wrap strong dir="ltr">
                   {row.en}
                 </TCell>
-                <TCell numeric wrap strong>
+                <TCell phrase wrap strong>
                   {row.fa}
                 </TCell>
               </TableGrid>
